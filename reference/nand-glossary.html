@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NAND Flash Glossary — SSD Debug Architect</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<h1>NAND Flash Glossary</h1>
+<p class="lesson-meta">Reference · The vocabulary every SSD debug conversation uses. Keep this open while reading any paper.</p>
+
+<h2>The Physical Hierarchy</h2>
+<table>
+<tr><th>Term</th><th>Meaning</th><th>Why a debug architect cares</th></tr>
+<tr><td><strong>Cell</strong></td><td>Single floating-gate (or charge-trap) transistor storing 1–4 bits via threshold voltage</td><td>Bit errors originate here; cell type sets endurance budget</td></tr>
+<tr><td><strong>Page</strong></td><td>Smallest readable/programmable unit (4–16 KB typical)</td><td>Reads and programs happen at page granularity — never smaller</td></tr>
+<tr><td><strong>Block</strong></td><td>Smallest erasable unit (64–512 pages, several MB)</td><td>Erase-before-write rule lives here; GC operates on blocks</td></tr>
+<tr><td><strong>Plane</strong></td><td>Independent array within a die; each has its own registers</td><td>Planes can operate in parallel — a latency lever</td></tr>
+<tr><td><strong>Die</strong></td><td>One silicon chip; contains 2–4 planes</td><td>Dies share a channel; a bad die = capacity loss</td></tr>
+<tr><td><strong>Way / CE</strong></td><td>One die position on a channel (chip enable)</td><td>Channels × ways = total parallelism of the drive</td></tr>
+<tr><td><strong>Channel</strong></td><td>Shared data bus connecting controller to several dies</td><td>Channel contention is a classic latency root cause</td></tr>
+</table>
+
+<h2>Cell Types &amp; Endurance</h2>
+<table>
+<tr><th>Type</th><th>Bits/cell</th><th>P/E cycles (typ.)</th><th>Trade-off</th></tr>
+<tr><td>SLC</td><td>1</td><td>~100,000</td><td>Fastest, most durable, most expensive per GB</td></tr>
+<tr><td>MLC</td><td>2</td><td>~3,000–10,000</td><td>Balanced legacy choice</td></tr>
+<tr><td>TLC</td><td>3</td><td>~1,000–3,000</td><td>Mainstream today; tighter voltage margins</td></tr>
+<tr><td>QLC</td><td>4</td><td>~300–1,000</td><td>Cheapest per GB; weakest endurance, slowest writes</td></tr>
+</table>
+<p>Fewer bits per cell = wider voltage separation between states = fewer misreads = more endurance.</p>
+
+<h2>Operations &amp; Rules</h2>
+<dl>
+<dt><strong>Program (write)</strong></dt><dd>Charge floating gate to raise threshold voltage. Page-granularity, sequential within a block.</dd>
+<dt><strong>Erase</strong></dt><dd>Clear all cells in a block to the erased state. Block-granularity, slow (~ms).</dd>
+<dt><strong>Erase-before-write</strong></dt><dd>A programmed page cannot be rewritten until its whole block is erased. <em>The</em> reason FTL exists.</dd>
+<dt><strong>P/E cycle</strong></dt><dd>One program+erase round trip on a block. Oxide degrades each cycle → wear.</dd>
+<dt><strong>Read disturb</strong></dt><dd>Repeated reads bias neighboring cells' thresholds upward → errors. Fixed by block rewrite.</dd>
+<dt><strong>Retention error</strong></dt><dd>Charge leaks over time (worse hot, worse after many P/E cycles) → errors on old data.</dd>
+<dt><strong>Program disturb</strong></dt><dd>Programming one page shifts thresholds on neighbors in the same block.</dd>
+</dl>
+
+<h2>Error Management</h2>
+<ul>
+<li><strong>ECC</strong> (BCH/LDPC): corrects bit errors within a page; uncorrectable = UBER event</li>
+<li><strong>Bad block</strong>: factory-marked at test, or "grown" during life; replaced from spare pool</li>
+<li><strong>RBER</strong>: raw bit error rate before ECC — a key health telemetry signal</li>
+<li><strong>UBER</strong>: uncorrectable bit error rate — data corruption that ECC couldn't fix</li>
+</ul>
+
+<footer>
+Source: ETH Zurich lecture <em>Basics of NAND Flash-Based SSDs</em> (<a href="../materials/ETH_NAND_Flash_Basics.pdf">local PDF</a>).<br>
+Part of the <a href="0001-nand-flash-basics.html">NAND Flash Basics lesson</a>. Ask your teacher (the agent) about anything unclear.
+</footer>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

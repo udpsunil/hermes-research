@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson 1: NAND Flash Basics — SSD Debug Architect</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<h1>Lesson 1: NAND Flash Basics</h1>
+<p class="lesson-meta">Weekend 1 · Saturday session · ~45 min · Mission: become an SSD debug architect</p>
+
+<div class="win"><strong>Today's win:</strong> You will be able to explain — from memory — why an SSD cannot overwrite data in place, and trace that single physical constraint to garbage collection, write amplification, and half the weird latency behavior you'll ever debug.</div>
+
+<h2>1. The one constraint that explains everything</h2>
+<p>A hard disk can overwrite a sector in place. NAND flash cannot. Inside a NAND chip:</p>
+<ul>
+<li>You <strong>read</strong> and <strong>write (program)</strong> in units of a <strong>page</strong> — typically 4–16 KB.</li>
+<li>You <strong>erase</strong> in units of a <strong>block</strong> — a group of 64–512 pages, several MB.</li>
+<li>Erasing sets every cell in the block to its starting state. Programming only <em>raises</em> a cell's threshold voltage — it can never lower it back.</li>
+</ul>
+<blockquote>So to change even one byte of a written page, the SSD must copy the valid pages of the block elsewhere, erase the whole block, then write. This is <strong>erase-before-write</strong> — the root cause behind garbage collection, write amplification, and the FTL itself.</blockquote>
+
+<h2>2. Cell types: trading bits for endurance</h2>
+<p>Each cell stores charge levels; more levels per cell = more bits, but the voltage states sit closer together, so misreads and wear accumulate faster.</p>
+<table>
+<tr><th>Cell</th><th>Bits</th><th>P/E cycles</th><th>Where you see it</th></tr>
+<tr><td>SLC</td><td>1</td><td>~100K</td><td>Industrial, write caches (pSLC)</td></tr>
+<tr><td>MLC</td><td>2</td><td>~3–10K</td><td>Legacy enterprise</td></tr>
+<tr><td>TLC</td><td>3</td><td>~1–3K</td><td>Mainstream SSDs today</td></tr>
+<tr><td>QLC</td><td>4</td><td>~300–1K</td><td>Cheap high-capacity drives</td></tr>
+</table>
+<p><strong>Debug lens:</strong> when a drive shows early wear-out or high raw bit error rates, the first question is <em>what NAND is in it?</em> A QLC drive at 500 P/E cycles is behaving normally; an SLC drive at 500 is broken.</p>
+
+<h2>3. Where errors come from</h2>
+<p>NAND errors are not bugs — they're physics. Four sources you'll chase your whole career:</p>
+<ol>
+<li><strong>Wear</strong> — oxide degrades with every P/E cycle, charge leaks faster.</li>
+<li><strong>Read disturb</strong> — reading a page repeatedly nudges neighboring cells' voltages. Mitigated by periodically rewriting blocks.</li>
+<li><strong>Retention loss</strong> — charge leaks over months; hot drives and worn cells lose it fastest.</li>
+<li><strong>Program disturb</strong> — programming one page perturbs its neighbors in the same block.</li>
+</ol>
+<p>The controller hides all of this with <strong>ECC</strong> (LDPC/BCH). Your telemetry signals: <strong>RBER</strong> (raw bit error rate, pre-ECC) trending up = wear or disturb; <strong>UBER</strong> (uncorrectable) = real data corruption.</p>
+
+<h2>Check your understanding</h2>
+
+<div class="quiz-q" data-answer="2">
+<p><strong>Q1.</strong> What is the smallest unit NAND can erase?</p>
+<button>A single page</button>
+<button>A single cell</button>
+<button>A whole block</button>
+<button>A whole plane</button>
+<div class="feedback" data-good="Correct — erase is block-granular, which is why changing one page requires copying and erasing the block." data-bad="Not quite — erase is always block-granular (64–512 pages). That's the whole reason the FTL exists."></div>
+</div>
+
+<div class="quiz-q" data-answer="1">
+<p><strong>Q2.</strong> Why does QLC have lower endurance than SLC?</p>
+<button>Its cells are physically larger</button>
+<button>Its voltage states are packed closer together</button>
+<button>It skips the ECC correction stage</button>
+<button>It erases more often than SLC</button>
+<div class="feedback" data-good="Correct — 4 charge levels squeezed into one cell means tighter voltage margins, so less degradation is tolerable before errors." data-bad="Not quite — it's the voltage margins: 4 levels per cell sit closer together, so small wear-driven shifts cause misreads sooner."></div>
+</div>
+
+<div class="quiz-q" data-answer="0">
+<p><strong>Q3.</strong> A drive's raw bit error rate is climbing after months of heavy reads but few writes. Most likely cause?</p>
+<button>Read disturb</button>
+<button>Program disturb</button>
+<button>Bad block growth</button>
+<button>Controller firmware crash</button>
+<div class="feedback" data-good="Correct — repeated reads bias neighboring cell thresholds upward; the standard fix is a background block rewrite." data-bad="Not quite — with few writes, program disturb and wear are unlikely. Repeated reads biasing neighbor thresholds (read disturb) fits best."></div>
+</div>
+
+<h2>Do this now (10 min)</h2>
+<p>Open the ETH Zurich lecture PDF and read only sections on <strong>page/block organization</strong> and <strong>cell types</strong> (skim the rest — it's Sunday's material):</p>
+<pre>start materials/ETH_NAND_Flash_Basics.pdf</pre>
+<p>Then write one paragraph in your own words answering: <em>"Why can't NAND overwrite in place, and what does that force the SSD to do?"</em> Keep it — it becomes the first page of your debug journal.</p>
+
+<h2>Primary source</h2>
+<p>📖 <a href="../materials/ETH_NAND_Flash_Basics.pdf">Basics of NAND Flash-Based SSDs — ETH Zurich (local PDF)</a> — read §cell types and §organization today.</p>
+<p>Quick lookup while you read: <a href="../reference/nand-glossary.html">NAND Glossary</a></p>
+
+<footer>
+<strong>Questions?</strong> Ask your teacher — me, right here in the chat. Anything unclear about cells, pages, or blocks is fair game.<br>
+Next: <em>Lesson 2 (Sunday) — the controller block diagram</em>. Full plan: <a href="../ssd_debug_study_plan.md">ssd_debug_study_plan.md</a>
+</footer>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

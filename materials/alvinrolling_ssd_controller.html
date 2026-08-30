@@ -1,0 +1,841 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.22.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Solid-State Drive Introduction - Alvin’s Stage</title>
+<meta name="description" content="Introduction to Solid-State Drive (SSD) for Beginners.">
+
+
+  <meta name="author" content="Alvin Tang">
+  
+  <meta property="article:author" content="Alvin Tang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Alvin's Stage">
+<meta property="og:title" content="Solid-State Drive Introduction">
+<meta property="og:url" content="https://alvinrolling.github.io/ssd/SSD-Controller/">
+
+
+  <meta property="og:description" content="Introduction to Solid-State Drive (SSD) for Beginners.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-01-16T04:00:30+00:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://alvinrolling.github.io/ssd/SSD-Controller/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Alvin Tang",
+      "url": "https://alvinrolling.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Alvin's Stage Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Alvin's Stage
+          <span class="site-subtitle">My Blog</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/">Home</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/year-archive/">Archive</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="https://alvinrolling.github.io/" itemprop="item"><span itemprop="name">Home</span></a>
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#ssd" itemprop="item"><span itemprop="name">Ssd</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Solid-State Drive Introduction</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="/assets/bio/avatar.jpg" alt="Alvin Tang" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Alvin Tang</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>ASIC Design Enginner</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Beijing, China</span>
+        </li>
+      
+
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/zijian-tang-24172b120/" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin-in" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:alvinrolling@gmail.com">
+            <meta itemprop="email" content="alvinrolling@gmail.com" />
+            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span>
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Solid-State Drive Introduction">
+    <meta itemprop="description" content="Introduction to Solid-State Drive (SSD) for Beginners.">
+    <meta itemprop="datePublished" content="2024-01-16T04:00:30+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Solid-State Drive Introduction
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2024-01-16T04:00:30+00:00">January 16, 2024</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-glasses"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#learning-resources">Learning Resources</a></li><li><a href="#basic-introduction">Basic Introduction</a><ul><li><a href="#performance">Performance</a></li></ul></li><li><a href="#ssd-controller">SSD Controller</a><ul><li><a href="#lifecycle">Lifecycle</a></li><li><a href="#parallelism">Parallelism</a></li></ul></li><li><a href="#further-reading">Further Reading</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <p>Introduction to <strong>Solid-State Drive (SSD)</strong> for Beginners.</p>
+
+<p>This article serves as a beginner’s guide to the <strong>SSD</strong> and <strong>SSD controllers.</strong>
+A significant portion of the content is carefully selected from various sources on the internet, as I’m relatively new to this field. Nonetheless, the article includes thorough discussions and emphasizes key points to offer an enhanced learning path for newcomers.</p>
+
+<h2 id="learning-resources">Learning Resources</h2>
+
+<ul>
+  <li><a href="https://www.snia.org/](https://www.snia.org/education/what-is-ssd)">SNIA</a> contains a lot of white papers and educational materials.</li>
+  <li><a href="https://codecapsule.com/2014/02/12/coding-for-ssds-part-1-introduction-and-table-of-contents/">Coding for SSDs</a> from Emmanuel Goossaert. Very thorough in-depth introductions.</li>
+  <li><a href="https://safari.ethz.ch/projects_and_seminars/spring2023/doku.php?id=modern_ssds">Modern SSD Design</a>, course from ETZ Zurich. It has rich contents with lecture slides and videos.</li>
+</ul>
+
+<h2 id="basic-introduction">Basic Introduction</h2>
+
+<p>Often the terms “Flash Storage” and “SSD” are used interchangeably, but while these technologies both store data, it’s worth knowing some key differences between the two.</p>
+
+<p>As described in <a href="https://www.cdw.com/content/cdw/en/articles/datacenter/difference-between-flash-vs-ssd-storage.html">this blog</a></p>
+<blockquote>
+  <p>To put it plainly, most SSDs will use flash memory, but not all flash memory devices are considered SSDs.</p>
+</blockquote>
+
+<h3 id="performance">Performance</h3>
+
+<blockquote>
+  <p>For example, while Client SSD use cases may largely be concerned with average response times, the Enterprise use cases are often more interested in maximum response times and the frequency and distribution of those response times.</p>
+</blockquote>
+
+<h2 id="ssd-controller">SSD Controller</h2>
+
+<p>The SSD (Solid State Drive) controller serves as a critical component in managing the operations of an SSD. It plays a pivotal role in ensuring the efficient and reliable functioning of the SSD.</p>
+
+<ul>
+  <li>Interface Management:</li>
+</ul>
+
+<blockquote>
+  <p>The SSD controller manages the communication interface between the SSD and the host system. It ensures proper interaction through interfaces like SATA, PCIe (NVMe or AHCI), or other storage protocols.</p>
+</blockquote>
+
+<ul>
+  <li>Command Processing:</li>
+</ul>
+
+<blockquote>
+  <p>The controller interprets and processes commands received from the host system. It executes read and write operations, manages data transfers, and handles other storage-related commands.</p>
+</blockquote>
+
+<ul>
+  <li>Flash Translation Layer (FTL):</li>
+</ul>
+
+<blockquote>
+  <p>The FTL is a crucial component of the SSD controller. It performs the mapping between logical block addresses (used by the host system) and physical locations on the NAND flash memory. This includes wear leveling to distribute write and erase cycles evenly across the memory cells.</p>
+</blockquote>
+
+<ul>
+  <li>Wear Leveling:</li>
+</ul>
+
+<blockquote>
+  <p>Wear leveling is a key function that extends the lifespan of the SSD by ensuring that write and erase cycles are distributed evenly across the NAND flash memory. The controller manages this process to prevent premature wear on specific memory cells.</p>
+</blockquote>
+
+<ul>
+  <li>Error Correction:</li>
+</ul>
+
+<blockquote>
+  <p>The controller implements error correction algorithms to address bit errors that may occur during read and write operations. This enhances data integrity and reliability.</p>
+</blockquote>
+
+<p>Bad Block Management:</p>
+
+<blockquote>
+  <p>Bad blocks may develop over time in NAND flash memory. The SSD controller identifies and manages these bad blocks, ensuring that data is stored in reliable locations and minimizing the impact of defective memory cells.</p>
+</blockquote>
+
+<ul>
+  <li>Garbage Collection:</li>
+</ul>
+
+<blockquote>
+  <p>Garbage collection is the process of reclaiming space by erasing blocks that are no longer in use. The SSD controller manages this process to optimize storage space and maintain overall performance.</p>
+</blockquote>
+
+<ul>
+  <li>Power Management:</li>
+</ul>
+
+<blockquote>
+  <p>The controller may incorporate power management features, such as transitioning the SSD between different power states (active, idle, sleep) to optimize power consumption and extend battery life in mobile devices.
+Firmware Execution:</p>
+</blockquote>
+
+<p><img src="/assets/NVMe/SSD_Controller_Connect.png" alt="SSD_Controller_Connect" />
+<em>Figure from <a href="https://semiengineering.com/four-steps-to-verifying-an-ssd-controller-with-emulation/">SemiconductorEngineer</a></em></p>
+
+<h3 id="lifecycle">Lifecycle</h3>
+
+<p>Each cell has a maximum number of P/E cycles (Program/Erase), after which the cell is considered defective. NAND-flash memory wears off and has a limited lifespan.</p>
+
+<p>Please refer to <a href="https://www.snia.org/sites/default/files/SSSITECHNOTES_HowControllersMaximizeSSDLife.pdf">How Controllers Maximize SSD Life</a> for details about how a controller could prolong the SSD lifespan through the following methods.</p>
+
+<ul>
+  <li>Wear Leveling</li>
+  <li>External Data Buffering</li>
+  <li>Improved ECC</li>
+  <li>Other Error Management</li>
+  <li>Reduced Write Amplification</li>
+  <li>Over Provisioning</li>
+  <li>Feedback on Block Wear</li>
+  <li>Internal NAND Management</li>
+</ul>
+
+<h3 id="parallelism">Parallelism</h3>
+
+<p>Parallelism distinguishes NVMe from the conventional SATA interface. Traditional hard disk drives (HDDs) lack support for true parallelism in read and write operations, especially compared to modern NAND-based SSDs. While SATA continues to be prevalent, the landscape shifts with the emergence of SSD technology. HDDs, relying on SATA, face limitations in achieving true parallelism. With SSDs gaining prominence, NVMe is poised to take a more central role soon as a protocol optimized for SSD’s inherent features of parallelism.</p>
+
+<p><img src="/assets/NVMe/NVMe_SATA_Trend.png" alt="NVMe_SATA_Trend" />
+<em>Source: Intel Forecasting, Q2’18</em></p>
+
+<p>The following parallel introduction is from <a href="https://codecapsule.com/2014/02/12/coding-for-ssds-part-4-advanced-functionalities-and-internal-parallelism/">Coding for SSDs</a>.</p>
+
+<blockquote>
+
+  <ul>
+    <li>Channel-level parallelism. The flash controller communicates with the flash packages through multiple channels. Those channels can be accessed independently and simultaneously. Each individual channel is shared by multiple packages.</li>
+    <li>Package-level parallelism. The packages on a channel can be accessed independently. Interleaving can be used to run commands simultaneously on the packages shared by the same channel.</li>
+    <li>Chip-level parallelism. A package contains two or more chips, which can be accessed independently in parallel. Note: chips are also called “dies”.</li>
+    <li>Plane-level parallelism. A chip contains two or more planes. The same operation (read, write or erase) can be run simultaneously on multiple planes inside a chip. Planes contain blocks, which themselves contains pages. The plane also contains registers (small RAM buffers), which are used for plane-level operations.</li>
+  </ul>
+</blockquote>
+
+<p><img src="/assets/NVMe/NAND_Flash_Package.png" alt="NAND_Flash_Package" />
+<em>NAND Flash Package</em></p>
+
+<h2 id="further-reading">Further Reading</h2>
+
+<ul>
+  <li>An example of <a href="https://thessdguy.com/tailor-made-enterprise-ssds/#more-2935">Tailor-Made Enterprise SSDs</a> from SwissBit.</li>
+  <li>A README <a href="https://github.com/mikeroyal/SSD-Guide">SSD guide</a> includes basic introduction of SSD and many other related knowledge.</li>
+  <li><a href="https://github.com/CMU-SAFARI/MQSim">MQSim</a>: A Simulator for Modern NVMe and SATA SSDs</li>
+  <li><a href="https://github.com/OpenChannelSSD/liblightnvm">The Open-Channel SSD User Space Library</a></li>
+  <li><a href="https://thessdguy.com/">SSD Guy</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#ssd" class="page__taxonomy-item" rel="tag">SSD</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2024-01-16T04:00:30+00:00">January 16, 2024</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Solid-State+Drive+Introduction%20https%3A%2F%2Falvinrolling.github.io%2Fssd%2FSSD-Controller%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Falvinrolling.github.io%2Fssd%2FSSD-Controller%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Falvinrolling.github.io%2Fssd%2FSSD-Controller%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/eda/uvm/UVM-Learning/" class="pagination--pager" title="UVM Learning Path
+">Previous</a>
+    
+    
+      <a href="/ssd/NVMe/" class="pagination--pager" title="NVMe Introduction
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="utterances-comments"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/vim/Slang-Linter-for-Vim-Ale/" rel="permalink">Integrating Slang Linter into the Vim ALE
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2024-01-22T04:00:30+00:00">January 22, 2024</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">This article outlines the process of incorporating slang linting tools into the Vim plugin ale.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ssd/SSD-Controller-Verification/" rel="permalink">SSD Controller Verification
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2024-01-18T04:00:30+00:00">January 18, 2024</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">This article provides insights into considerations for SSD Controller Functional Verification.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/vim/Vim-UVM-Snippets/" rel="permalink">Vim UVM Snippets
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2024-01-17T04:00:30+00:00">January 17, 2024</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">This article outlines the process of adding UVM snippets to the vim-snippet GitHub repository.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ssd/NVMe/" rel="permalink">NVMe Introduction
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2024-01-16T04:06:30+00:00">January 16, 2024</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Introduction to Non-Volatile Memory Express (NVMe) Interface for Beginners.
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 Alvin Tang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'AlvinRolling/AlvinRolling.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+
+  </body>
+</html>

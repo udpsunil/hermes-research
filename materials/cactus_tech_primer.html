@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+          <link rel="pingback" href="https://www.cactus-tech.com/xmlrpc.php">
+            <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+	<!-- This site is optimized with the Yoast SEO plugin v27.9 - https://yoast.com/product/yoast-seo-wordpress/ -->
+	<title>Solid State Drive Primer # 8 - Controller Architecture - Channels and Banks</title>
+	<meta name="description" content="Confused about the many NAND configurations in SSD design and why it makes a large difference to the overall power, performance and cost? Cactus explains" />
+	<link rel="canonical" href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Solid State Drive Primer # 8 - Controller Architecture - Channels and Banks" />
+	<meta property="og:description" content="Confused about the many NAND configurations in SSD design and why it makes a large difference to the overall power, performance and cost? Cactus explains" />
+	<meta property="og:url" content="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/" />
+	<meta property="og:site_name" content="Cactus Technologies" />
+	<meta property="article:publisher" content="http://www.facebook.com/CactusTech" />
+	<meta property="article:published_time" content="2015-05-25T13:53:55+00:00" />
+	<meta property="article:modified_time" content="2019-04-26T17:50:42+00:00" />
+	<meta property="og:image" content="https://www.cactus-tech.com/wp-content/uploads/2019/03/SIlicon-Wafer-Image-b60d8849.jpg" />
+	<meta property="og:image:width" content="300" />
+	<meta property="og:image:height" content="200" />
+	<meta property="og:image:type" content="image/jpeg" />
+	<meta name="author" content="Steve Larrivee" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:creator" content="@CactusTech" />
+	<meta name="twitter:site" content="@CactusTech" />
+	<meta name="twitter:label1" content="Written by" />
+	<meta name="twitter:data1" content="Steve Larrivee" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https:\/\/schema.org","@graph":[{"@type":"Article","@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/#article","isPartOf":{"@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/"},"author":{"name":"Steve Larrivee","@id":"https:\/\/www.cactus-tech.com\/#\/schema\/person\/5e271e67d57fbbcaed6acb9b4ad95727"},"headline":"Solid State Drive Primer # 8 - Controller Architecture - Channels and Banks","datePublished":"2015-05-25T13:53:55+00:00","dateModified":"2019-04-26T17:50:42+00:00","mainEntityOfPage":{"@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/"},"wordCount":545,"commentCount":18,"publisher":{"@id":"https:\/\/www.cactus-tech.com\/#organization"},"image":{"@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/#primaryimage"},"thumbnailUrl":"https:\/\/www.cactus-tech.com\/wp-content\/uploads\/2019\/03\/SIlicon-Wafer-Image-b60d8849.jpg","articleSection":["Engineering"],"inLanguage":"en-US","potentialAction":[{"@type":"CommentAction","name":"Comment","target":["https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/#respond"]}]},{"@type":"WebPage","@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/","url":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/","name":"Solid State Drive Primer # 8 - Controller Architecture - Channels and Banks","isPartOf":{"@id":"https:\/\/www.cactus-tech.com\/#website"},"primaryImageOfPage":{"@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/#primaryimage"},"image":{"@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/#primaryimage"},"thumbnailUrl":"https:\/\/www.cactus-tech.com\/wp-content\/uploads\/2019\/03\/SIlicon-Wafer-Image-b60d8849.jpg","datePublished":"2015-05-25T13:53:55+00:00","dateModified":"2019-04-26T17:50:42+00:00","description":"Confused about the many NAND configurations in SSD design and why it makes a large difference to the overall power, performance and cost? Cactus explains","breadcrumb":{"@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/"]}]},{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/#primaryimage","url":"https:\/\/www.cactus-tech.com\/wp-content\/uploads\/2019\/03\/SIlicon-Wafer-Image-b60d8849.jpg","contentUrl":"https:\/\/www.cactus-tech.com\/wp-content\/uploads\/2019\/03\/SIlicon-Wafer-Image-b60d8849.jpg","width":300,"height":200},{"@type":"BreadcrumbList","@id":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/solid-state-drive-primer-8-controller-architecture-channels-and-banks\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/www.cactus-tech.com\/"},{"@type":"ListItem","position":2,"name":"Solid State Drive Primer # 8 - Controller Architecture - Channels and Banks"}]},{"@type":"WebSite","@id":"https:\/\/www.cactus-tech.com\/#website","url":"https:\/\/www.cactus-tech.com\/","name":"Cactus Technologies","description":"Industrial Grade Flash Storage Devices","publisher":{"@id":"https:\/\/www.cactus-tech.com\/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\/\/www.cactus-tech.com\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https:\/\/www.cactus-tech.com\/#organization","name":"Cactus Technologies","url":"https:\/\/www.cactus-tech.com\/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/www.cactus-tech.com\/#\/schema\/logo\/image\/","url":"https:\/\/www.cactus-tech.com\/wp-content\/uploads\/2019\/03\/logo-lg.png","contentUrl":"https:\/\/www.cactus-tech.com\/wp-content\/uploads\/2019\/03\/logo-lg.png","width":1500,"height":750,"caption":"Cactus Technologies"},"image":{"@id":"https:\/\/www.cactus-tech.com\/#\/schema\/logo\/image\/"},"sameAs":["http:\/\/www.facebook.com\/CactusTech","https:\/\/x.com\/CactusTech","https:\/\/www.linkedin.com\/company\/cactustech","http:\/\/www.youtube.com\/user\/CactusTech"]},{"@type":"Person","@id":"https:\/\/www.cactus-tech.com\/#\/schema\/person\/5e271e67d57fbbcaed6acb9b4ad95727","name":"Steve Larrivee","url":"https:\/\/www.cactus-tech.com\/resources\/blog\/details\/author\/steve\/"}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="Cactus Technologies &raquo; Feed" href="https://www.cactus-tech.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Cactus Technologies &raquo; Comments Feed" href="https://www.cactus-tech.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Cactus Technologies &raquo; Solid State Drive Primer # 8 - Controller Architecture - Channels and Banks Comments Feed" href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://www.cactus-tech.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cactus-tech.com%2Fresources%2Fblog%2Fdetails%2Fsolid-state-drive-primer-8-controller-architecture-channels-and-banks%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://www.cactus-tech.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.cactus-tech.com%2Fresources%2Fblog%2Fdetails%2Fsolid-state-drive-primer-8-controller-architecture-channels-and-banks%2F&#038;format=xml" />
+<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style*=border-color]){border-style:solid}html :where([style*=border-top-color]){border-top-style:solid}html :where([style*=border-right-color]){border-right-style:solid}html :where([style*=border-bottom-color]){border-bottom-style:solid}html :where([style*=border-left-color]){border-left-style:solid}html :where([style*=border-width]){border-style:solid}html :where([style*=border-top-width]){border-top-style:solid}html :where([style*=border-right-width]){border-right-style:solid}html :where([style*=border-bottom-width]){border-bottom-style:solid}html :where([style*=border-left-width]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
+</style>
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='perfect_columns-css' href='https://www.cactus-tech.com/wp-content/plugins/reliable-perfect-columns/css/perfect-columns.css?ver=7.0.4' media='all' />
+<link rel='stylesheet' id='am_external_css_0-css' href='https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&#038;ver=7.0.4' media='all' />
+<link rel='stylesheet' id='am_external_css_1-css' href='https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800&#038;ver=7.0.4' media='all' />
+<link rel='stylesheet' id='am_assets-css-font-awesome-min-css-css' href='https://www.cactus-tech.com/wp-content/themes/cactus-tech/assets/css/font-awesome.min.css?ver=1722478078' media='all' />
+<link rel='stylesheet' id='am_style-css-css' href='https://www.cactus-tech.com/wp-content/themes/cactus-tech/style.css?ver=1722478077' media='all' />
+<link rel='stylesheet' id='am_assets-css-style-wp-css-css' href='https://www.cactus-tech.com/wp-content/themes/cactus-tech/assets/css/style-wp.css?ver=1722478078' media='all' />
+<link rel='stylesheet' id='tablepress-default-css' href='https://www.cactus-tech.com/wp-content/tablepress-combined.min.css?ver=11' media='all' />
+<link rel='stylesheet' id='ari-fancybox-css' href='https://www.cactus-tech.com/wp-content/plugins/ari-fancy-lightbox/assets/fancybox/jquery.fancybox.min.css?ver=1.8.13' media='all' />
+<script id="wr2x-picturefill-js-js" src="https://www.cactus-tech.com/wp-content/plugins/wp-retina-2x/app/picturefill.min.js?ver=1782953923"></script>
+<script id="jquery-core-js" src="https://www.cactus-tech.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="https://www.cactus-tech.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script id="ari-fancybox-js-extra">
+var ARI_FANCYBOX = {"lightbox":{"animationDuration":330,"transitionDuration":330,"idleTime":4,"toolbar":true,"buttons":["close"],"backFocus":false,"trapFocus":false,"video":{"autoStart":false},"thumbs":{"hideOnClose":false},"touch":{"vertical":true,"momentum":true},"preventCaptionOverlap":false,"hideScrollbar":false,"lang":"custom","i18n":{"custom":{"PREV":"Previous","NEXT":"Next","PLAY_START":"Start slideshow (P)","PLAY_STOP":"Stop slideshow (P)","FULL_SCREEN":"Full screen (F)","THUMBS":"Thumbnails (G)","ZOOM":"Zoom","CLOSE":"Close (Esc)","ERROR":"The requested content cannot be loaded. \u003Cbr/\u003E Please try again later."}}},"convert":{"wp_gallery":{"convert":false},"pdf":{"convert":true},"links_blank":{"external":false}},"mobile":{"disabled":true},"slideshow":{},"deeplinking":{},"integration":{},"share":{"enabled":false,"buttons":{"facebook":{"enabled":false},"twitter":{"enabled":false},"gplus":{"enabled":false},"pinterest":{"enabled":false},"linkedin":{"enabled":false},"vk":{"enabled":false}},"ignoreTypes":["iframe","inline"]},"comments":{"supportedTypes":["image"]},"protect":{},"extra":{"fullScreen":{"autoStart":true}},"viewers":{"pdfjs":{"url":"https://www.cactus-tech.com/wp-content/plugins/ari-fancy-lightbox/assets/pdfjs/web/viewer.html"}},"messages":{"share_facebook_title":"Share on Facebook","share_twitter_title":"Share on Twitter","share_gplus_title":"Share on Google+","share_pinterest_title":"Share on Pinterest","share_linkedin_title":"Share on LinkedIn","share_vk_title":"Share on VK","share_email_title":"Send by e-mail","download_title":"Download","comments":"Comments"}};
+//# sourceURL=ari-fancybox-js-extra
+</script>
+<script id="ari-fancybox-js" src="https://www.cactus-tech.com/wp-content/plugins/ari-fancy-lightbox/assets/fancybox/jquery.fancybox.min.js?ver=1.8.13"></script>
+<link rel="https://api.w.org/" href="https://www.cactus-tech.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://www.cactus-tech.com/wp-json/wp/v2/posts/3452" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.cactus-tech.com/xmlrpc.php?rsd" />
+<link rel='shortlink' href='https://www.cactus-tech.com/?p=3452' />
+<style type="text/css">BODY .fancybox-container{z-index:200000}BODY .fancybox-is-open .fancybox-bg{opacity:0.87}BODY .fancybox-bg {background-color:#0f0f11}BODY .fancybox-thumbs {background-color:#ffffff}</style><style>.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style><link rel="icon" href="https://www.cactus-tech.com/wp-content/uploads/2019/03/favicon.png" sizes="32x32" />
+<link rel="icon" href="https://www.cactus-tech.com/wp-content/uploads/2019/03/favicon.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://www.cactus-tech.com/wp-content/uploads/2019/03/favicon.png" />
+<meta name="msapplication-TileImage" content="https://www.cactus-tech.com/wp-content/uploads/2019/03/favicon.png" />
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5WCWH4B');</script>
+<!-- End Google Tag Manager -->
+<meta name="ahrefs-site-verification" content="9059c73cf186fc5942949fc29b2814e8e68d3e13eda41a5d12cd18356a4c5b1c">
+<meta name="google-site-verification" content="LKse80w5ZGpVFiWBn1gAdf4-DTsXTbMyhGj2cM2ew7o" />  <link rel='stylesheet' id='nf-display-css' href='https://www.cactus-tech.com/wp-content/plugins/ninja-forms/assets/css/display-structure.css?ver=7.0.4' media='all' />
+
+</head>
+
+  <body class="wp-singular post-template-default single single-post postid-3452 single-format-standard wp-theme-cactus-tech interior chrome">
+    <div id="wrapper">
+
+
+      <header class="region header">
+        <div class="segments header">
+          <div class="nav-toggle button-container">
+            <img class="nav-toggle" 
+                 src="https://www.cactus-tech.com/wp-content/themes/cactus-tech/assets/images/theme/nav-toggle.png" 
+                 alt="nav-toggle">
+          </div>
+
+
+                                <span class="logo">
+              <a href="https://www.cactus-tech.com/">
+                <img src="https://www.cactus-tech.com/wp-content/uploads/2019/03/logo.png" srcset="https://www.cactus-tech.com/wp-content/uploads/2019/03/logo.png 2x" width="160" height="110" alt="" >                <!--<img src="images/theme/logo.png" alt="" width="160" height="110">-->
+              </a>
+            </span><!-- indexer::stop -->
+          
+
+
+                        <nav class="menu expertnav" role="navigation">
+                <header>
+                  <h5>Help us learn about your needs:</h5>
+                </header>                                  <ul>
+                    <li class="first last">
+                      <a href="https://www.cactus-tech.com/contact-us/talk-to-a-cactus-expert/" class="button" >Talk to a Cactus Expert</a>                      <p>The Cactus team lives and breathes Industrial Grade flash storage and can provide more detailed information or answer questions to assist your design efforts. Please give us the opportunity to discuss your program and recommend the right product based on your needs.</p>
+                    </li>
+                  </ul>
+                              </nav><!-- indexer::continue -->
+               
+
+
+
+
+          <!-- indexer::stop -->
+          <section class="content form search" role="form">
+            <form action="https://www.cactus-tech.com" id="f5" 
+                  method="get" enctype="application/x-www-form-urlencoded">
+              <div class="field text mandatory">
+                <div class="label"><label 
+                    for="ctrl_34" class="mandatory"><span 
+                      class="invisible">Mandatory field</span> Keywords<span
+                      class="mandatory">*</span></label> </div>
+                <div class="control"> <input type="text" name="s" id="ctrl_34" class="text mandatory" value="" required=""> </div>
+              </div>
+              <div class="field submit">
+                <div class="control"> <input type="submit" id="ctrl_35" class="submit" value="Search"> </div>
+              </div>
+            </form>
+          </section><!-- indexer::continue --><a href="http://www.cactus-tech.cn" class="lang zh" >中</a><!-- indexer::stop -->
+
+
+
+                      <nav class="menu secondarynav" role="navigation">
+              <a class="first" href="https://www.cactus-tech.com/">Home</a>
+<a class="" href="https://www.cactus-tech.com/resources/blog/">Blog</a>
+<a class="" href="https://www.cactus-tech.com/resources/white-papers/">White Papers</a>
+<a class="" href="https://www.cactus-tech.com/resources/brochures-manuals-and-technical-data/">Brochures, Manuals and Technical Data</a>
+<a class="" href="https://www.cactus-tech.com/resources/email-newsletter/">Email Newsletter</a>
+<a class="last" href="https://www.cactus-tech.com/rep-portal/">Rep Portal</a>
+            </nav>
+          <!-- indexer::continue -->
+
+        </div>
+      </header>
+
+
+
+      <div class="region navigation">
+        <div class="segments navigation">
+          <!-- indexer::stop -->
+                      <nav class="menu mainnav" role="navigation">
+              <ul id="menu-main-navigation" class="mainmenu"><li class="nav-header"> 
+            <a>Menu</a> 
+            <a class="menu-back">Arrow</a> 
+            <a class="nav-toogle menu-close">Close</a>
+          </li><li  id="menu-item-366" data-c="153" class="products menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/products/">Products</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>	<li  id="menu-item-367" data-c="298" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/products/industrial-grade/">Industrial Grade</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>		<li  id="menu-item-368" data-c="312" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/compact-flash/">CompactFlash</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-371" data-c="318" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/sdchip/">SDChip</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-382" data-c="320" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/microsd/">microSD</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-384" data-c="322" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/sd-card/">SD Card</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-387" data-c="324" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/msata/">mSATA</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-393" data-c="328" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/sata-ii-ssd/">SATA II SSD</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-392" data-c="330" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/sata-iii-ssd/">SATA III SSD</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-396" data-c="332" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/cfast/">CFast</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-399" data-c="334" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/usb-flash-drive/">USB Flash Drive</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-400" data-c="336" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/usb-dom/">USB DOM</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-2840" data-c="2834" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/udom-m-2/">uDOM M.2</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-401" data-c="338" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-grade/ide-ssd/">IDE SSD</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+	<li  id="menu-item-372" data-c="300" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/products/industrial-pslc/">Industrial pSLC</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>		<li  id="menu-item-373" data-c="340" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-pslc/sata-iii-ssd/">SATA III SSD</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-374" data-c="342" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-pslc/msata/">mSATA</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-375" data-c="344" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-pslc/m2/">M.2 SATA</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-6528" data-c="6526" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-pslc/m-2-pcie/">M.2 PCIe</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-376" data-c="346" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-pslc/cfast/">CFast</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-6517" data-c="6515" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-pslc/cfexpress/">CFexpress</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-385" data-c="348" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-pslc/sd-card/">SD Card</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-5783" data-c="5781" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-pslc/microsd/">microSD</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+	<li  id="menu-item-377" data-c="302" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/products/industrial-mlc/">Industrial MLC</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>		<li  id="menu-item-394" data-c="364" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-mlc/sata-iii-ssd/">SATA III SSD</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-388" data-c="358" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-mlc/msata/">mSATA</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-402" data-c="360" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-mlc/m2/">M.2 SATA</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-381" data-c="356" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-mlc/cfast/">CFast</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-378" data-c="350" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-mlc/compactflash/">CompactFlash</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-380" data-c="354" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-mlc/sd-card/">SD Card</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-379" data-c="352" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-mlc/microsd/">microSD</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+	<li  id="menu-item-5394" data-c="5388" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/products/industrial-3d/">Industrial 3D</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>		<li  id="menu-item-6110" data-c="6106" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-3d/sata-iii-ssd/">SATA III SSD</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-5796" data-c="5794" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-3d/pciechip/">PCIeChip</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-5397" data-c="5395" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-3d/m-2-pcie/">M.2 PCIe</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-6559" data-c="6556" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-3d/cfast/">CFast</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-5067" data-c="5061" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-3d/cfexpress/">CFexpress</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-6496" data-c="6494" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-3d/sd-card/">SD Card</a><a class="arrow-level">Arrow</a></li>
+		<li  id="menu-item-5799" data-c="5791" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/industrial-3d/microsd/">microSD</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+	<li  id="menu-item-404" data-c="304" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/cactus-product-series/">Cactus Product Series</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-405" data-c="306" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/new-products/">New Products</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-406" data-c="308" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/western-digital-silicon-systems-cross-reference/">Western Digital (SIlicon Systems) Cross Reference</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-407" data-c="310" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/products/stec-cross-reference/">STEC Cross Reference</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+<li  id="menu-item-293" data-c="155" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/supported-interfaces/">Supported Interfaces</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>	<li  id="menu-item-294" data-c="285" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/supported-interfaces/ide-interface/">IDE Interface</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-295" data-c="287" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/supported-interfaces/sd-interface/">SD Interface</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-296" data-c="289" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/supported-interfaces/sata-interface/">SATA Interface</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-297" data-c="291" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/supported-interfaces/usb-interface/">USB Interface</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-4562" data-c="4559" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/supported-interfaces/pcie-interface/">PCIe Interface</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+<li  id="menu-item-274" data-c="157" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/markets-served/">Markets Served</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>	<li  id="menu-item-275" data-c="254" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/locomotive/">Locomotive</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-276" data-c="256" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/gaming/">Gaming</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-277" data-c="258" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/healthcare/">Healthcare</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-278" data-c="260" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/single-board-computer/">Single Board Computer</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-279" data-c="262" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/heavy-industrial/">Heavy Industrial</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-280" data-c="264" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/aerospace/">Aerospace</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-281" data-c="266" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/long-life-bom-control/">Long Life/BOM Control</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-282" data-c="268" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/displays/">Displays</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-283" data-c="270" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/telecom/">Telecom</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-284" data-c="272" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/markets-served/automotive/">Automotive</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+<li  id="menu-item-247" data-c="159" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/cactus-difference/">The Cactus Difference</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>	<li  id="menu-item-248" data-c="235" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/cactus-difference/we-are-industrial-grade/">We ARE Industrial Grade</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-249" data-c="237" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/cactus-difference/why-industrial-grade/">Why Industrial Grade</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-250" data-c="239" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/cactus-difference/industrial-grade-vs-industrial-mlc/">Industrial Grade vs. Industrial MLC</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-251" data-c="241" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/cactus-difference/oem-flash-storage-solution/">OEM Flash Storage Solution</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-252" data-c="243" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/cactus-difference/customization/">Customization</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-253" data-c="245" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/cactus-difference/unique-features/">Unique Features</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+<li  id="menu-item-230" data-c="161" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/case-studies/">Case Studies</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>	<li  id="menu-item-2370" data-c="2363" class="menu-item menu-item-type-post_type menu-item-object-case_study"><a href="https://www.cactus-tech.com/case-study/provided-reliability-for-polycom/">Provided Reliability for Polycom</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-2369" data-c="2364" class="menu-item menu-item-type-post_type menu-item-object-case_study"><a href="https://www.cactus-tech.com/case-study/compactflash-write-protection-switch-solves-problems/">CompactFlash Write Protection Switch Solves Problems</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-2368" data-c="2365" class="menu-item menu-item-type-post_type menu-item-object-case_study"><a href="https://www.cactus-tech.com/case-study/free-needs-analysis-uncovers-need-for-industrial-grade-products/">Free Needs Analysis Uncovers Need for Industrial Grade Products</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-2367" data-c="2366" class="menu-item menu-item-type-post_type menu-item-object-case_study"><a href="https://www.cactus-tech.com/case-study/customized-cactus-part-solves-customer-storage-issue/">Customized Cactus Part Solves Customer Storage Issue</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+<li  id="menu-item-203" data-c="163" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children current-menu-ancestor submenu "><a href="https://www.cactus-tech.com/resources/">Resources</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>	<li  id="menu-item-204" data-c="189" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item"><a href="https://www.cactus-tech.com/resources/blog/">Blog</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-205" data-c="191" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/resources/white-papers/">White Papers</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-206" data-c="193" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/resources/brochures-manuals-and-technical-data/">Brochures, Manuals and Technical Data</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-207" data-c="195" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/resources/glossary/">Glossary</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-208" data-c="197" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/resources/email-newsletter/">Email Newsletter</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-209" data-c="201" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/resources/ebooks/">Ebooks</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+<li  id="menu-item-210" data-c="165" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/about-us/">About Us</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>	<li  id="menu-item-211" data-c="177" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/about-us/history/">History</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-212" data-c="179" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/about-us/leadership/">Leadership</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-213" data-c="181" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/about-us/quality-reliability/">Quality &#038; Reliability</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-214" data-c="183" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/about-us/certification-and-associations/">Certification and Associations</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-215" data-c="185" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/about-us/product-lines/">Product Lines</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-216" data-c="187" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/about-us/press-releases/">Press Releases</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+<li  id="menu-item-217" data-c="167" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children submenu "><a href="https://www.cactus-tech.com/contact-us/">Contact Us</a><a class="arrow-level">Arrow</a><ul><li class="nav-header"> 
+                <a>Menu</a> 
+                <a class="menu-back">Arrow</a>
+                <a class="menu-close">Close</a>
+              </li>	<li  id="menu-item-219" data-c="169" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/contact-us/talk-to-a-cactus-expert/">Talk to a Cactus Expert</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-218" data-c="171" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/contact-us/request-a-product-sample/">Request a Product Sample</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-220" data-c="173" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/contact-us/applications-engineering-support/">Applications Engineering Support</a><a class="arrow-level">Arrow</a></li>
+	<li  id="menu-item-221" data-c="175" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://www.cactus-tech.com/contact-us/find-a-sales-rep-distributor/">Find a Sales Rep/Distributor</a><a class="arrow-level">Arrow</a></li>
+</ul></li>
+</ul>            </nav><!-- indexer::continue -->
+                  </div>
+      </div>
+
+
+
+      <main class="main region">
+
+        <div class="breadcrumbs-block">
+          <div class="container">
+            <ul class="breadcrumbs-nav">  <li><a href="https://www.cactus-tech.com/" title="Cactus Technologies" rel="home" class="trail-begin">Home</a></li>  <li><a href="https://www.cactus-tech.com/resources/" title="Resources">Resources</a></li>  <li><a href="https://www.cactus-tech.com/resources/blog/" title="Blog">Blog</a></li>  <li><a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/" class="active">Solid State Drive Primer # 8 - Controller Architecture - Channels and Banks</a></li></ul>
+          </div>
+        </div>
+
+<div class="main-holder">
+  <div class="container">
+    <div id="content">
+      <div class="content-holder">
+        <div class="content-frame">
+
+          
+            
+
+              
+
+              <div class="title none">
+                <h1>Solid State Drive Primer # 8 - Controller Architecture - Channels and Banks</h1>
+              </div>
+
+
+              <footer class="meta md">
+                <time pubdate="pubdate" datetime="2015-05-25T09:53:55-04:00">May 25th, 2015</time>
+
+                                  <span class="topics">Topics: <a href="https://www.cactus-tech.com/resources/blog/details/category/engineering/">Engineering</a>                     
+                  </span>
+                
+                <address class="author"> <a href="https://www.cactus-tech.com/about-us/leadership/">Steve Larrivee</a></address>
+
+
+              </footer>
+
+
+              <div class="entry styled-headline">
+                <!--                  <figure class="alignright" role="img">
+                    <img src="https://www.cactus-tech.com/wp-content/uploads/2019/03/SIlicon-Wafer-Image-b60d8849.jpg" alt="">
+                  </figure>
+                -->
+
+                <section class="content text"><em>This is Blog #8 of 13 in our <a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drives-101-everything-you-ever-wanted-to-know">Solid State Drives 101 educational series</a>. If you're ready, <a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drive-primer-9-controller-architecture-controller-block-diagram">continue to Blog #9: Controller Block Diagram</a>.</em></p>
+<hr />
+<p></p>
+<p><img fetchpriority="high" decoding="async" class="size-medium wp-image-1038 alignright" src="https://www.cactus-tech.com/wp-content/uploads/2019/03/SIlicon-Wafer-Image-b60d8849-300x200.jpg" alt="" width="300" height="200" />This article follows the <a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drive-primer-7-controller-architecture-basic-overview">Basic SSD Controller</a> Architecture article. It will focus on the connection between the SSD controller and the NAND flash. There are many NAND configurations in SSD design and it makes a large difference to the SSD’s overall power, performance and cost.</p>
+<p>The illustration below shows a common 2.5” SATA III SSD NAND configuration. In this example, there are 8 Channels connected to the NAND chips. For each channel there are 2 Banks of NAND components.</p>
+<p>There is a control line which selects either Bank 1 or Bank 2 to be active on the Data/Control Bus for a specific channel. This control line is connected to the Chip Select of each NAND component to enable or disable the component.</p>
+<p>&nbsp;</p>
+<p><img decoding="async" class="size-full wp-image-1215 aligncenter" src="https://www.cactus-tech.com/wp-content/uploads/2019/03/NAND-Channels-and-Banks-828e8a4c.png" alt="" width="780" height="975" /></p>
+<section class="content text">
+<header>
+<h2>NAND Channels:</h2>
+</header>
+<p>Channels refer to the number of flash chips the controller can talk to simultaneously. Low end SSDs usually have 2 or 4 channels; high end SSDs usually have 8 channels, some have 10 channels.</p>
+<p>SSD manufacturers can trade off performance vs power consumption by stuffing less channels at time of manufacture. The limitation on more channels is added die size, pin count and power consumption, which all increase the cost.</p>
+</section>
+<section class="content text">
+<header>
+<h2>NAND Banks:</h2>
+</header>
+<p>Each flash chip at the same location in a channel together constitutes a bank. Refer to the diagram above. Each channel can have multiple chips. The limitation on maximum number of chips is a result of pin count/die size/cost considerations.</p>
+</section>
+<section class="content text">
+<header>
+<h2>Additional SSD Performance Techniques:</h2>
+<section class="content text"><img decoding="async" class="size-full wp-image-1042 alignleft" src="https://www.cactus-tech.com/wp-content/uploads/2019/03/TSOP-with-Mutiple-Die-a91c57b9.png" alt="" width="300" height="150" />To further increase performance, controllers can take advantage of interleaving. Each NAND flash chip can have multiple dies in it, this is particularly so for high density parts. 2/4/8 die packs are common.</p>
+<p>The illustration to the left shows a cutaway of a TSOP NAND component with multiple layers of die stacked on top of each other to create a single large capacity NAND flash chip.</p>
+<p>For a multi-die package, it is possible for each die to carry out a command; this is refer to as interleaving and can significantly increase device performance. The ability to interleave is dependent on flash/controller/firmware support.</p>
+<p>Another mechanism to improve performance is multi-plane operation. A flash chip is internally organized in planes, with low density devices being single plane and higher density devices with 2, 4 or more planes.</p>
+<p>In a multi-plane devices, it is possible for all planes to carry out a command in parallel (this is like interleaving but for a single die). Multi-plane operation, when available, can substantially improve device performance.</p>
+<p>This article provides a basic understanding of the Channel and bank architecture as well as performance enhancement techniques in an SSD. There are other more advanced techniques, such as copyback writes, cache reads, etc. which we did not cover.</p>
+<p>Next article will dig into the <a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drive-primer-9-controller-architecture-controller-block-diagram">controller functions and a block diagram</a>.</p>
+<p>If you would like to discuss this further please <a href="https://www.cactus-tech.com/contact-us/talk-to-a-cactus-expert">contact us</a>.</p>
+</section>
+<section class="content text"><a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drive-primer-9-controller-architecture-controller-block-diagram">Continue to Blog #9: Controller Block Diagram</a> or learn all about Solid State Drives:</p>
+<ul>
+<li><a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drives-101-everything-you-ever-wanted-to-know">What is a Solid State Drive?</a></li>
+<li><a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drives-101-everything-you-ever-wanted-to-know">What does a Solid State Drive do?</a></li>
+<li><a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drives-101-everything-you-ever-wanted-to-know">What is a Solid State Drive Used for?</a></li>
+<li><a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drives-101-everything-you-ever-wanted-to-know">How do Solid State Drives Work?</a></li>
+<li><a href="https://www.cactus-tech.com/en/resources/blog/details/solid-state-drives-101-everything-you-ever-wanted-to-know">How long do Solid State Drives last?</a></li>
+</ul>
+</section>
+</header>
+</section>
+
+
+                
+                
+
+
+
+              </div>
+
+                              <div class="bottom-info">
+                  <footer class="bio styled-headline">
+                    <p>Steve Larrivee has over 30 year's experience in the data storage market, including 5 years at Seagate Technology and 10 years at SanDisk. He joined Cactus Technologies Limited as an equity partner and Co-Founded Cactus USA in 2007 with partner Tom Aguillon. Learn more about Steve on <a href="http://www.linkedin.com/in/steve-larrivee-a53a9a71" target="_blank" rel="noopener">LinkedIn</a>.</p>
+                  </footer>
+                </div>
+              
+
+
+
+              
+
+	<h3 id="comments">Comments (18)</h3>
+
+	<div class="commentlist">
+				<div id="comment-40" class="comment even thread-even depth-1">
+			<article id="div-comment-40" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://accounts.binance.com/zh-TC/register?ref=OMM3XK51" class="url" rel="ugc external nofollow">創建免費帳戶</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-40"><time datetime="2024-04-28T05:04:19-04:00">April 28, 2024 at 5:04 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Can you be more specific about the content of your article? After reading it, I still have some doubts. Hope you can help me.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-193" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-193" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.info/en-IN/register?ref=UM6SMJM3" class="url" rel="ugc external nofollow">Anonymous</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-193"><time datetime="2024-10-13T02:52:27-04:00">October 13, 2024 at 2:52 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thank you for your sharing. I am worried that I lack creative ideas. It is your article that makes me full of hope. Thank you. But, I have a question, can you help me? <a href="https://www.binance.com/ph/register?ref=B4EPR6J0" rel="nofollow ugc">https://www.binance.com/ph/register?ref=B4EPR6J0</a></p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-258" class="comment even thread-even depth-1">
+			<article id="div-comment-258" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.com/en-IN/register?ref=UM6SMJM3" class="url" rel="ugc external nofollow">100 USDT</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-258"><time datetime="2024-11-11T11:29:22-05:00">November 11, 2024 at 11:29 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thank you for your sharing. I am worried that I lack creative ideas. It is your article that makes me full of hope. Thank you. But, I have a question, can you help me?</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-318" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-318" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://accounts.binance.com/da-DK/register?ref=V2H9AFPY" class="url" rel="ugc external nofollow">binance signup bonus</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-318"><time datetime="2024-12-04T05:48:18-05:00">December 4, 2024 at 5:48 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Your article helped me a lot, is there any more related content? Thanks!</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-384" class="comment even thread-even depth-1">
+			<article id="div-comment-384" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.info/fr/register?ref=GJY4VW8W" class="url" rel="ugc external nofollow">Meilleur code de parrainage Binance</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-384"><time datetime="2024-12-25T08:07:24-05:00">December 25, 2024 at 8:07 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thank you for your sharing. I am worried that I lack creative ideas. It is your article that makes me full of hope. Thank you. But, I have a question, can you help me?</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-429" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-429" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.com/da-DK/register?ref=V2H9AFPY" class="url" rel="ugc external nofollow">Create Personal Account</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-429"><time datetime="2025-01-10T23:11:58-05:00">January 10, 2025 at 11:11 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Your point of view caught my eye and was very interesting. Thanks. I have a question for you.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-457" class="comment even thread-even depth-1">
+			<article id="div-comment-457" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.info/zh-CN/register?ref=IJFGOAID" class="url" rel="ugc external nofollow">Binance注册奖金</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-457"><time datetime="2025-01-21T19:23:06-05:00">January 21, 2025 at 7:23 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thanks for sharing. I read many of your blog posts, cool, your blog is very good.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-488" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-488" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.com/es-MX/register?ref=JHQQKNKN" class="url" rel="ugc external nofollow">binance us register</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-488"><time datetime="2025-02-01T11:25:47-05:00">February 1, 2025 at 11:25 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thank you for your sharing. I am worried that I lack creative ideas. It is your article that makes me full of hope. Thank you. But, I have a question, can you help me?</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-720" class="comment even thread-even depth-1">
+			<article id="div-comment-720" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://accounts.binance.com/pl/register-person?ref=YY80CKRN" class="url" rel="ugc external nofollow">Konto na Binance</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-720"><time datetime="2025-04-19T21:10:48-04:00">April 19, 2025 at 9:10 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Your point of view caught my eye and was very interesting. Thanks. I have a question for you.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-800" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-800" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://accounts.binance.com/pl/register-person?ref=YY80CKRN" class="url" rel="ugc external nofollow">Kod Binance</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-800"><time datetime="2025-05-15T20:06:54-04:00">May 15, 2025 at 8:06 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Can you be more specific about the content of your article? After reading it, I still have some doubts. Hope you can help me. <a href="https://www.binance.com/es-MX/register?ref=JHQQKNKN" rel="nofollow ugc">https://www.binance.com/es-MX/register?ref=JHQQKNKN</a></p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-1038" class="comment even thread-even depth-1">
+			<article id="div-comment-1038" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.info/cs/register?ref=IJFGOAID" class="url" rel="ugc external nofollow">bezplatn'y úcet na binance</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-1038"><time datetime="2025-07-21T11:16:22-04:00">July 21, 2025 at 11:16 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>I don't think the title of your article matches the content lol. Just kidding, mainly because I had some doubts after reading the article.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-1095" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-1095" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.com/hu/register?ref=FIHEGIZ8" class="url" rel="ugc external nofollow">binance referral code</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-1095"><time datetime="2025-08-08T07:34:30-04:00">August 8, 2025 at 7:34 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thank you for your sharing. I am worried that I lack creative ideas. It is your article that makes me full of hope. Thank you. But, I have a question, can you help me?</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-1098" class="comment even thread-even depth-1">
+			<article id="div-comment-1098" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://accounts.binance.com/register?ref=P9L9FQKY" class="url" rel="ugc external nofollow">开设Binance账户</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-1098"><time datetime="2025-08-08T20:06:25-04:00">August 8, 2025 at 8:06 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thank you for your sharing. I am worried that I lack creative ideas. It is your article that makes me full of hope. Thank you. But, I have a question, can you help me?</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-1182" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-1182" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.com/pl/register?ref=YY80CKRN" class="url" rel="ugc external nofollow">Zarejestruj sie</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-1182"><time datetime="2025-08-25T20:55:16-04:00">August 25, 2025 at 8:55 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Your point of view caught my eye and was very interesting. Thanks. I have a question for you. <a href="https://www.binance.info/es/register-person?ref=T7KCZASX" rel="nofollow ugc">https://www.binance.info/es/register-person?ref=T7KCZASX</a></p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-1752" class="comment even thread-even depth-1">
+			<article id="div-comment-1752" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.info/sk/register?ref=WKAGBF7Y" class="url" rel="ugc external nofollow">binance odkaz</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-1752"><time datetime="2026-02-09T11:47:15-05:00">February 9, 2026 at 11:47 am</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thank you for your sharing. I am worried that I lack creative ideas. It is your article that makes me full of hope. Thank you. But, I have a question, can you help me?</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-1901" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-1901" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.com/join?ref=JW3W4Y3A" class="url" rel="ugc external nofollow">Binance注册</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-1901"><time datetime="2026-03-15T22:59:37-04:00">March 15, 2026 at 10:59 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Can you be more specific about the content of your article? After reading it, I still have some doubts. Hope you can help me.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-2256" class="comment even thread-even depth-1">
+			<article id="div-comment-2256" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://www.binance.info/register?ref=IHJUI7TF" class="url" rel="ugc external nofollow">Binance账户创建</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-2256"><time datetime="2026-05-22T15:48:38-04:00">May 22, 2026 at 3:48 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thank you for your sharing. I am worried that I lack creative ideas. It is your article that makes me full of hope. Thank you. But, I have a question, can you help me? <a href="https://www.binance.bh/register?ref=IHJUI7TF" rel="nofollow ugc">https://www.binance.bh/register?ref=IHJUI7TF</a></p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+		<div id="comment-2584" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-2584" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+												<b class="fn"><a href="https://lishan148.synology.me:3014/mikaylaveal86" class="url" rel="ugc external nofollow">lishan148.synology.me</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://www.cactus-tech.com/resources/blog/details/solid-state-drive-primer-8-controller-architecture-channels-and-banks/#comment-2584"><time datetime="2026-07-25T20:55:56-04:00">July 25, 2026 at 8:55 pm</time></a>					</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>References: </p>
+<p>Instant Casino Anmeldung instant casino bonus code, <a href="https://lishan148.synology.me:3014/mikaylaveal86" rel="nofollow ugc">lishan148.synology.me</a>,, lishan148.synology.me,</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+		</div><!-- #comment-## -->
+	</div>
+
+		
+
+	<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply</h3><form action="https://www.cactus-tech.com/wp-comments-post.php?wpe-comment-post=cactustechprod" method="post" id="commentform" class="comment-form"><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> <span class="required-field-message">Required fields are marked <span class="required">*</span></span></p><p class="comment-form-author"><label for="author">Name</label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" autocomplete="name" /></p>
+<p class="comment-form-email"><label for="email">Email</label> <input id="email" name="email" type="email" value="" size="30" maxlength="100" aria-describedby="email-notes" autocomplete="email" /></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="url" value="" size="30" maxlength="200" autocomplete="url" /></p>
+<p class="comment-form-comment"><label for="comment">Comment <span class="required">*</span></label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required></textarea></p><p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='3452' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p></form>	</div><!-- #respond -->
+	
+            
+          
+        </div>
+      </div>
+    </div>
+
+    <aside id="sidebar">
+
+	
+    
+      <div class="widget widget-subnav">
+        <nav class="menu subnav" role="navigation">
+          <ul>
+
+            <li class="page_item page-item-189  current-menu-item "><a href="https://www.cactus-tech.com/resources/blog/">Blog</a>
+<ul class='children'>
+<li class="page_item page-item-2394  hidden-link "><a href="https://www.cactus-tech.com/resources/blog/archive/">Archive</a></li>
+</ul>
+</li>
+<li class="page_item page-item-191"><a href="https://www.cactus-tech.com/resources/white-papers/">White Papers</a></li>
+<li class="page_item page-item-193"><a href="https://www.cactus-tech.com/resources/brochures-manuals-and-technical-data/">Brochures, Manuals and Technical Data</a></li>
+<li class="page_item page-item-195"><a href="https://www.cactus-tech.com/resources/glossary/">Glossary</a></li>
+<li class="page_item page-item-197"><a href="https://www.cactus-tech.com/resources/email-newsletter/">Email Newsletter</a></li>
+<li class="page_item page-item-201"><a href="https://www.cactus-tech.com/resources/ebooks/">Ebooks</a></li>
+
+
+
+
+
+          </ul>
+        </nav>
+
+
+        
+
+        
+
+
+
+      </div>
+
+
+
+
+
+
+      
+
+
+    
+    <!--    
+            <ul>
+              <li class="first"> <a href="supported-interfaces/ide-interface" class="first">IDE Interface</a> </li>
+              <li> <a href="supported-interfaces/sd-interface">SD Interface</a> </li>
+              <li> <a href="supported-interfaces/sata-interface">SATA Interface</a> </li>
+              <li class="last"> <a href="supported-interfaces/usb-interface" class="last">USB Interface</a> </li>
+            </ul>-->
+
+
+
+
+
+
+    
+
+
+    <div class="widget widget-advice">
+              <h3>SUBSCRIBE TO THE CACTUS QUARTERLY NEWSLETTER</h3>
+                    <div class="txt">
+          <p>Every quarter we'll send you notification of our top blog posts and newly added whitepapers. You can unsubscribe at any time.</p>
+        </div>
+            <div class="form-email">
+        
+        
+            <noscript class="ninja-forms-noscript-message">
+	Notice: JavaScript is required for this content.</noscript>
+<div id="nf-form-7-cont" class="nf-form-cont" aria-live="polite" aria-labelledby="nf-form-title-7" aria-describedby="nf-form-errors-7" role="form">
+
+    <div class="nf-loading-spinner"></div>
+
+</div>
+        <!-- That data is being printed as a workaround to page builders reordering the order of the scripts loaded-->
+        <script>var formDisplay=1;var nfForms=nfForms||[];var form=[];form.id='7';form.settings={"objectType":"Form Setting","editActive":true,"title":"Email Newsletter","created_at":"2019-04-01 07:46:53","form_title":"MailChimp Signup","default_label_pos":"above","show_title":"0","clear_complete":"1","hide_complete":"1","logged_in":"0","wrapper_class":"","element_class":"","key":"","add_submit":"0","currency":"","unique_field_error":"A form with this value has already been submitted.","not_logged_in_msg":"","sub_limit_msg":"The form has reached its submission limit.","calculations":[],"formContentData":["email_1554119398241","sign_up_1554119441204"],"drawerDisabled":false,"changeEmailErrorMsg":"Please enter a valid email address!","changeDateErrorMsg":"Please enter a valid date!","confirmFieldErrorMsg":"These fields must match!","fieldNumberNumMinError":"Number Min Error","fieldNumberNumMaxError":"Number Max Error","fieldNumberIncrementBy":"Please increment by ","formErrorsCorrectErrors":"Please correct errors before submitting this form.","validateRequiredField":"This is a required field.","honeypotHoneypotError":"Honeypot Error","fieldsMarkedRequired":"Fields marked with an <span class=\"ninja-forms-req-symbol\">*<\/span> are required","allow_public_link":0,"embed_form":"","conditions":[{"collapsed":false,"process":1,"connector":"all","when":[{"connector":"AND","key":"email_1554119398241","comparator":"","value":"","type":"field","modelType":"when"}],"then":[{"key":"","trigger":"","value":"","type":"field","modelType":"then"}],"else":[]}],"ninjaForms":"Ninja Forms","fieldTextareaRTEInsertLink":"Insert Link","fieldTextareaRTEInsertMedia":"Insert Media","fieldTextareaRTESelectAFile":"Select a file","tableInsertRowAbove":"Insert Row Above","tableInsertRowBelow":"Insert Row Below","tableInsertColumnLeft":"Insert Column Left","tableInsertColumnRight":"Insert Column Right","tableDeleteRow":"Delete Row","tableDeleteColumn":"Delete Column","tableDeleteTable":"Delete Table","tableLegacyNotice":"This content has tables in the old editor format. Custom styles are preserved until converted. Editing will update to the new format.","tableLegacyConvert":"Convert Now","tableInsertTable":"Insert Table","dismiss":"Dismiss","insertLink":"Insert Link","formHoneypot":"If you are a human seeing this field, please leave it empty.","fileUploadOldCodeFileUploadInProgress":"File Upload in Progress.","fileUploadOldCodeFileUpload":"FILE UPLOAD","currencySymbol":"&#36;","thousands_sep":",","decimal_point":".","siteLocale":"en_US","dateFormat":"m\/d\/Y","startOfWeek":"1","of":"of","previousMonth":"Previous Month","nextMonth":"Next Month","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthsShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"weekdaysShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"weekdaysMin":["Su","Mo","Tu","We","Th","Fr","Sa"],"recaptchaConsentMissing":"reCaptcha validation couldn&#039;t load.","recaptchaMissingCookie":"reCaptcha v3 validation couldn&#039;t load the cookie needed to submit the form.","recaptchaConsentEvent":"Accept reCaptcha cookies before sending the form.","currency_symbol":"","beforeForm":"","beforeFields":"","afterFields":"","afterForm":""};form.fields=[{"objectType":"Field","objectDomain":"fields","editActive":false,"order":3,"idAttribute":"id","label":"EMAIL","type":"email","key":"email_1554119398241","label_pos":"above","required":1,"default":"","placeholder":"","container_class":"","element_class":"","admin_label":"","help_text":"","custom_name_attribute":"email","drawerDisabled":false,"field_label":"Email","field_key":"email_1523972427420","personally_identifiable":1,"value":"","id":53,"beforeField":"","afterField":"","parentType":"email","element_templates":["email","input"],"old_classname":"","wrap_template":"wrap"},{"objectType":"Field","objectDomain":"fields","editActive":false,"order":4,"idAttribute":"id","label":"Sign Up","type":"submit","processing_label":"Processing...","container_class":"","element_class":"","key":"sign_up_1554119441204","drawerDisabled":false,"field_label":"Subscribe","field_key":"subscribe_1523977672092","id":54,"beforeField":"","afterField":"","value":"","label_pos":"above","parentType":"textbox","element_templates":["submit","button","input"],"old_classname":"","wrap_template":"wrap-no-label"}];nfForms.push(form);</script>
+                
+        
+        
+        
+      </div>
+    </div>
+
+
+
+
+
+
+    
+
+
+    <div class="widget widget-advice">
+              <h3>STAY UPDATED WITH CACTUS?</h3>
+      
+      
+
+      <ul class="menu socialnavaside">
+                  <li class="facebook first">
+            <span class="circle">
+              <i class="fa fa-facebook" aria-hidden="true"></i>
+            </span>
+            <div class="hold">
+              <a href="http://www.facebook.com/CactusTech"
+                 class="facebook first" rel="nofollow" target="_blank">Facebook</a>
+              <!--<p>200 Followers</p>-->
+            </div>
+          </li>
+                          <li class="twitter">
+            <span class="circle">
+              <i class="fa fa-twitter" aria-hidden="true"></i>
+            </span>
+            <div class="hold">
+              <a href="http://www.twitter.com/CactusTech" 
+                 class="twitter" rel="nofollow" target="_blank">Twitter</a>
+              <!--<p>50 Followers</p>-->
+            </div>
+          </li>
+                          <li class="linkedin">
+            <span class="circle">
+              <i class="fa fa-linkedin" aria-hidden="true"></i>
+            </span>
+            <div class="hold">
+              <a href="https://www.linkedin.com/company/cactustech"
+                 class="linkedin" rel="nofollow" target="_blank">LinkedIn</a>
+            </div>
+          </li>
+                          <li class="youtube">
+            <span class="circle">
+              <i class="fa fa-youtube" aria-hidden="true"></i>
+            </span>
+            <div class="hold">
+              <a href="http://www.youtube.com/user/CactusTech" 
+                 class="youtube" rel="nofollow" target="_blank">YouTube</a>
+            </div>
+          </li>
+                          <li class="rss last">
+            <span class="circle">
+              <i class="fa fa-rss" aria-hidden="true"></i>
+            </span>
+            <div class="hold">
+              <a href="https://www.cactus-tech.com/feed/rss2/" 
+                 class="rss last" rel="nofollow" target="_blank">Cactus Blog RSS Feed</a>
+            </div>
+          </li>
+              </ul>
+
+
+    </div>
+
+
+
+
+
+
+    
+</aside>
+  </div>
+</div>
+
+</main>
+
+
+<footer class="region footer" role="contentinfo">
+  <div class="segments footer">
+    <div class="segment primary">
+                <header>
+            <h4>Connect with Cactus Technologies</h4> <a href="https://www.cactus-tech.com/contact-us/" class="more" >Contact Us</a>          </header>
+          <!-- indexer::stop -->
+
+
+                    <ul class="menu socialnav">
+                      <li><a href="http://www.facebook.com/CactusTech" 
+                   class="facebook first" rel="nofollow" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                    <li><a href="http://www.twitter.com/CactusTech" 
+                   class="twitter" rel="nofollow" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                    <li><a href="https://www.linkedin.com/company/cactustech" 
+                   class="linkedin" rel="nofollow" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                                    <li><a href="http://www.youtube.com/user/CactusTech" 
+                   class="youtube last" rel="nofollow" target="_blank"><i class="fa fa-youtube" aria-hidden="true"></i></a></li>
+                    </ul><!-- indexer::continue -->
+
+
+                    <address class="styled-headline">
+          <p><strong>Cactus Technologies Limited</strong><br />
+Suite C, 15/F, Capital Trade Center<br />
+62 Tsun Yip Street, Kwun Tong,<br />
+Kowloon, Hong Kong<br />
+<a href="tel:(852)27972261">(852) 2797 2261</a></p>
+<p><strong>Cactus USA</strong><br />
+3112 Windsor Road , Suite A356<br />
+Austin, Texas 78703<br />
+<a href="tel:(512)775-0746">(512) 775-0746</a></p>
+        </address><!-- indexer::stop -->
+
+
+      
+          <nav class="menu expertnav" role="navigation">
+            <header>
+              <h5>Help us learn about your needs:</h5>
+            </header>            <ul>
+              <li class="first last"> <a href="https://www.cactus-tech.com/contact-us/talk-to-a-cactus-expert/" class="button first last" >Talk to a Cactus Expert</a>                <p>The Cactus team lives and breathes Industrial Grade flash storage and can provide more detailed information or answer questions to assist your design efforts. Please give us the opportunity to discuss your program and recommend the right product based on your needs.</p>
+              </li>
+            </ul>
+          </nav>
+
+          <!-- indexer::continue -->
+
+
+
+    </div>
+    <div class="segment secondary">
+
+
+                <header class="resources">
+            <h4>Recently Added Resources</h4> <a href="https://www.cactus-tech.com/resources/" class="more" >See All Resources</a>          </header>
+          <!-- indexer::stop -->
+
+
+
+              <section class="articles news blog">
+          
+            <article class="first last even" role="article">
+                              <figure class="right" role="img"> <img src="https://www.cactus-tech.com/wp-content/uploads/Cactus-Technologies_grade-selection-tool_2023_01-19_1100_720x576-90x72.png" alt="" /> </figure>
+                            <header>
+                <h4><a href="https://www.cactus-tech.com/resources/blog/details/what-are-industrial-pslc-flash-storage-devices-and-which-solution-is-right-for-my-oem-system-2/">Industrial,  Industrial pSLC, Industrial MLC &#038; Industrial 3D Flash Storage Devices - which solution is Right for my OEM System?</a></h4>
+              </header>
+              <footer class="meta"><time pubdate="pubdate" datetime="2023-01-25T18:10:36-05:00">January 25th, 2023</time></footer>
+                              <p><span>&nbsp; &nbsp; For almost two decades, industrial, Industrial pSLC, and Industrial MLC have been flash storage terms used by Cactus Technologies to describe our product offerings. With the advent of the Industrial 3D-TLC NAND, Cactus can now offer reliable, high-performance PCIe interface products and has created a new Industrial 3D category on our selector guide....</span></p>
+                          </article>
+                  </section>
+        <!-- indexer::continue -->
+
+
+
+
+
+      <!-- indexer::stop -->
+              <section class="articles news whitepapers">
+                                    <article class="first last even" 
+                       role="article"> <a target="_blank"
+                                 href="https://www.cactus-tech.com/wp-content/uploads/Collateral/Multi-Word-DMA-Compatibility-for-Cactus-Industrial-Grade-Flash-Storage-Products-1.pdf">
+                  <footer class="meta"><time pubdate="pubdate" datetime="2019-03-16T13:49:26-04:00">03/16/2019</time></footer>
+                </a>
+                <header>
+                  <h4><a target="_blank" 
+                         href="https://www.cactus-tech.com/wp-content/uploads/Collateral/Multi-Word-DMA-Compatibility-for-Cactus-Industrial-Grade-Flash-Storage-Products-1.pdf">MultiWord DMA Compatibility for Cactus Industrial-Grade Flash- Storage Products</a></h4>
+                </header>
+                <p>There are some customers who have trouble with DMA mode transfers. This document serves as a troubleshooting guide for DMA mode usage in our products.</p>
+              </article>
+                              </section>
+        <!-- indexer::continue -->
+
+
+
+    </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<div class="region bottom">
+  <div class="segments bottom">
+    <!-- indexer::stop -->
+          <nav class="menu footernav" role="navigation"> 
+        <a class="first" href="https://www.cactus-tech.com/warranty-statement/">Warranty Statement</a>
+<a class="" href="https://www.cactus-tech.com/privacy-policy/">Privacy Policy</a>
+      </nav>
+        <!-- indexer::continue -->
+    <p class="copyright">Copyright © 2026 Cactus Technologies</p>
+  </div>
+</div>
+
+
+  <div class="region associations">
+    <div class="segments associations">
+              <figure class="content image center segment logos first"
+                role="img"> <img src="https://www.cactus-tech.com/wp-content/uploads/2019/03/CompactFlash-Association-b5407a6f.png" srcset="https://www.cactus-tech.com/wp-content/uploads/2019/03/CompactFlash-Association-b5407a6f.png 2x" width="133" height="80" alt="" > </figure>
+                <figure class="content image center segment logos "
+                role="img"> <img src="https://www.cactus-tech.com/wp-content/uploads/2019/03/SD-Logo-0a5220b0.png" srcset="https://www.cactus-tech.com/wp-content/uploads/2019/03/SD-Logo-0a5220b0.png 2x" width="160" height="53" alt="" > </figure>
+                <figure class="content image center segment logos "
+                role="img"> <img src="https://www.cactus-tech.com/wp-content/uploads/2019/03/SATA-Logo-e1360737.jpg" srcset="https://www.cactus-tech.com/wp-content/uploads/2019/03/SATA-Logo-e1360737.jpg 2x" width="93" height="80" alt="" > </figure>
+                <figure class="content image center segment logos "
+                role="img"> <img src="https://www.cactus-tech.com/wp-content/uploads/2019/03/USB-Implementers-Forum-Logo-aa94e0e4.jpg" srcset="https://www.cactus-tech.com/wp-content/uploads/2019/03/USB-Implementers-Forum-Logo-aa94e0e4.jpg 2x" width="144" height="80" alt="" > </figure>
+                <figure class="content image center segment logos last"
+                role="img"> <img src="https://www.cactus-tech.com/wp-content/uploads/2019/03/JEDEC-Logo-f0594152.png" srcset="https://www.cactus-tech.com/wp-content/uploads/2019/03/JEDEC-Logo-f0594152.png 2x" width="160" height="55" alt="" > </figure>
+            </div>
+  </div>
+
+</div>
+
+  <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/cactus-tech/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script id="am_assets-js-tablesorter-js-js" src="https://www.cactus-tech.com/wp-content/themes/cactus-tech/assets/js/tablesorter.js?ver=1722478077"></script>
+<script id="am_assets-js-general-js-js" src="https://www.cactus-tech.com/wp-content/themes/cactus-tech/assets/js/general.js?ver=1722478077"></script>
+<script id="underscore-js" src="https://www.cactus-tech.com/wp-includes/js/underscore.min.js?ver=1.13.8"></script>
+<script id="backbone-js" src="https://www.cactus-tech.com/wp-includes/js/backbone.min.js?ver=1.6.1"></script>
+<script id="nf-front-end-deps-js" src="https://www.cactus-tech.com/wp-content/plugins/ninja-forms/assets/js/min/front-end-deps.js?ver=3.14.8"></script>
+<script id="nf-front-end-js-extra">
+var nfi18n = {"ninjaForms":"Ninja Forms","changeEmailErrorMsg":"Please enter a valid email address!","changeDateErrorMsg":"Please enter a valid date!","confirmFieldErrorMsg":"These fields must match!","fieldNumberNumMinError":"Number Min Error","fieldNumberNumMaxError":"Number Max Error","fieldNumberIncrementBy":"Please increment by ","fieldTextareaRTEInsertLink":"Insert Link","fieldTextareaRTEInsertMedia":"Insert Media","fieldTextareaRTESelectAFile":"Select a file","tableInsertRowAbove":"Insert Row Above","tableInsertRowBelow":"Insert Row Below","tableInsertColumnLeft":"Insert Column Left","tableInsertColumnRight":"Insert Column Right","tableDeleteRow":"Delete Row","tableDeleteColumn":"Delete Column","tableDeleteTable":"Delete Table","tableLegacyNotice":"This content has tables in the old editor format. Custom styles are preserved until converted. Editing will update to the new format.","tableLegacyConvert":"Convert Now","tableInsertTable":"Insert Table","dismiss":"Dismiss","insertLink":"Insert Link","formErrorsCorrectErrors":"Please correct errors before submitting this form.","formHoneypot":"If you are a human seeing this field, please leave it empty.","validateRequiredField":"This is a required field.","honeypotHoneypotError":"Honeypot Error","fileUploadOldCodeFileUploadInProgress":"File Upload in Progress.","fileUploadOldCodeFileUpload":"FILE UPLOAD","currencySymbol":"$","fieldsMarkedRequired":"Fields marked with an \u003Cspan class=\"ninja-forms-req-symbol\"\u003E*\u003C/span\u003E are required","thousands_sep":",","decimal_point":".","siteLocale":"en_US","dateFormat":"m/d/Y","startOfWeek":"1","of":"of","previousMonth":"Previous Month","nextMonth":"Next Month","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthsShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"weekdaysShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"weekdaysMin":["Su","Mo","Tu","We","Th","Fr","Sa"],"recaptchaConsentMissing":"reCaptcha validation couldn't load.","recaptchaMissingCookie":"reCaptcha v3 validation couldn't load the cookie needed to submit the form.","recaptchaConsentEvent":"Accept reCaptcha cookies before sending the form."};
+var nfFrontEnd = {"adminAjax":"https://www.cactus-tech.com/wp-admin/admin-ajax.php","ajaxNonce":"e9033964f7","requireBaseUrl":"https://www.cactus-tech.com/wp-content/plugins/ninja-forms/assets/js/","use_merge_tags":{"user":{"address":"address","textbox":"textbox","button":"button","checkbox":"checkbox","city":"city","confirm":"confirm","date":"date","email":"email","firstname":"firstname","html":"html","hcaptcha":"hcaptcha","hidden":"hidden","lastname":"lastname","listcheckbox":"listcheckbox","listcountry":"listcountry","listimage":"listimage","listmultiselect":"listmultiselect","listradio":"listradio","listselect":"listselect","liststate":"liststate","note":"note","number":"number","password":"password","passwordconfirm":"passwordconfirm","product":"product","quantity":"quantity","recaptcha":"recaptcha","recaptcha_v3":"recaptcha_v3","repeater":"repeater","shipping":"shipping","signature":"signature","spam":"spam","starrating":"starrating","submit":"submit","terms":"terms","textarea":"textarea","total":"total","turnstile":"turnstile","unknown":"unknown","zip":"zip","hr":"hr"},"post":{"address":"address","textbox":"textbox","button":"button","checkbox":"checkbox","city":"city","confirm":"confirm","date":"date","email":"email","firstname":"firstname","html":"html","hcaptcha":"hcaptcha","hidden":"hidden","lastname":"lastname","listcheckbox":"listcheckbox","listcountry":"listcountry","listimage":"listimage","listmultiselect":"listmultiselect","listradio":"listradio","listselect":"listselect","liststate":"liststate","note":"note","number":"number","password":"password","passwordconfirm":"passwordconfirm","product":"product","quantity":"quantity","recaptcha":"recaptcha","recaptcha_v3":"recaptcha_v3","repeater":"repeater","shipping":"shipping","signature":"signature","spam":"spam","starrating":"starrating","submit":"submit","terms":"terms","textarea":"textarea","total":"total","turnstile":"turnstile","unknown":"unknown","zip":"zip","hr":"hr"},"system":{"address":"address","textbox":"textbox","button":"button","checkbox":"checkbox","city":"city","confirm":"confirm","date":"date","email":"email","firstname":"firstname","html":"html","hcaptcha":"hcaptcha","hidden":"hidden","lastname":"lastname","listcheckbox":"listcheckbox","listcountry":"listcountry","listimage":"listimage","listmultiselect":"listmultiselect","listradio":"listradio","listselect":"listselect","liststate":"liststate","note":"note","number":"number","password":"password","passwordconfirm":"passwordconfirm","product":"product","quantity":"quantity","recaptcha":"recaptcha","recaptcha_v3":"recaptcha_v3","repeater":"repeater","shipping":"shipping","signature":"signature","spam":"spam","starrating":"starrating","submit":"submit","terms":"terms","textarea":"textarea","total":"total","turnstile":"turnstile","unknown":"unknown","zip":"zip","hr":"hr"},"fields":{"address":"address","textbox":"textbox","button":"button","checkbox":"checkbox","city":"city","confirm":"confirm","date":"date","email":"email","firstname":"firstname","html":"html","hcaptcha":"hcaptcha","hidden":"hidden","lastname":"lastname","listcheckbox":"listcheckbox","listcountry":"listcountry","listimage":"listimage","listmultiselect":"listmultiselect","listradio":"listradio","listselect":"listselect","liststate":"liststate","note":"note","number":"number","password":"password","passwordconfirm":"passwordconfirm","product":"product","quantity":"quantity","recaptcha":"recaptcha","recaptcha_v3":"recaptcha_v3","repeater":"repeater","shipping":"shipping","signature":"signature","spam":"spam","starrating":"starrating","submit":"submit","terms":"terms","textarea":"textarea","total":"total","turnstile":"turnstile","unknown":"unknown","zip":"zip","hr":"hr"},"calculations":{"html":"html","hidden":"hidden","note":"note","unknown":"unknown"}},"opinionated_styles":"","filter_esc_status":"false","nf_consent_status_response":[]};
+var nfInlineVars = [];
+//# sourceURL=nf-front-end-js-extra
+</script>
+<script id="nf-front-end-js" src="https://www.cactus-tech.com/wp-content/plugins/ninja-forms/assets/js/min/front-end.js?ver=3.14.8"></script>
+<script id="nf-cl-front-end-js" src="https://www.cactus-tech.com/wp-content/plugins/ninja-forms-conditionals/assets/js/min/front-end.js?ver=7.0.4"></script>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WCWH4B"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) --><script id="tmpl-nf-layout" type="text/template">
+	<span id="nf-form-title-{{{ data.id }}}" class="nf-form-title">
+		{{{ ( 1 == data.settings.show_title ) ? '<h' + data.settings.form_title_heading_level + '>' + data.settings.title + '</h' + data.settings.form_title_heading_level + '>' : '' }}}
+	</span>
+	<div class="nf-form-wrap ninja-forms-form-wrap">
+		<div class="nf-response-msg"></div>
+		<div class="nf-debug-msg"></div>
+		<div class="nf-before-form"></div>
+		<div class="nf-form-layout"></div>
+		<div class="nf-after-form"></div>
+	</div>
+</script>
+
+<script id="tmpl-nf-empty" type="text/template">
+
+</script>
+<script id="tmpl-nf-before-form" type="text/template">
+	{{{ data.beforeForm }}}
+</script><script id="tmpl-nf-after-form" type="text/template">
+	{{{ data.afterForm }}}
+</script><script id="tmpl-nf-before-fields" type="text/template">
+    <div class="nf-form-fields-required">{{{ data.renderFieldsMarkedRequired() }}}</div>
+    {{{ data.beforeFields }}}
+</script><script id="tmpl-nf-after-fields" type="text/template">
+    {{{ data.afterFields }}}
+    <div id="nf-form-errors-{{{ data.id }}}" class="nf-form-errors" role="alert"></div>
+    <div class="nf-form-hp"></div>
+</script>
+<script id="tmpl-nf-before-field" type="text/template">
+    {{{ data.beforeField }}}
+</script><script id="tmpl-nf-after-field" type="text/template">
+    {{{ data.afterField }}}
+</script><script id="tmpl-nf-form-layout" type="text/template">
+	<form>
+		<div>
+			<div class="nf-before-form-content"></div>
+			<div class="nf-form-content {{{ data.element_class }}}"></div>
+			<div class="nf-after-form-content"></div>
+		</div>
+	</form>
+</script><script id="tmpl-nf-form-hp" type="text/template">
+	<label id="nf-label-field-hp-{{{ data.id }}}" for="nf-field-hp-{{{ data.id }}}" aria-hidden="true">
+		{{{ nfi18n.formHoneypot }}}
+		<input id="nf-field-hp-{{{ data.id }}}" name="nf-field-hp" class="nf-element nf-field-hp" type="text" value="" aria-labelledby="nf-label-field-hp-{{{ data.id }}}" />
+	</label>
+</script>
+<script id="tmpl-nf-field-layout" type="text/template">
+    <div id="nf-field-{{{ data.id }}}-container" class="nf-field-container {{{ data.type }}}-container {{{ data.renderContainerClass() }}}" data-testid="nf-field-{{{ data.key }}}" data-nf-field-type="{{{ data.type }}}">
+        <div class="nf-before-field"></div>
+        <div class="nf-field"></div>
+        <div class="nf-after-field"></div>
+    </div>
+</script>
+<script id="tmpl-nf-field-before" type="text/template">
+    {{{ data.beforeField }}}
+</script><script id="tmpl-nf-field-after" type="text/template">
+    <#
+    /*
+     * Render our input limit section if that setting exists.
+     */
+    #>
+    <div class="nf-input-limit"></div>
+    <#
+    /*
+     * Render our error section if we have an error.
+     */
+    #>
+    <div id="nf-error-{{{ data.id }}}" class="nf-error-wrap nf-error" role="alert" aria-live="assertive"></div>
+    <#
+    /*
+     * Render any custom HTML after our field.
+     */
+    #>
+    {{{ data.afterField }}}
+</script>
+<script id="tmpl-nf-field-wrap" type="text/template">
+	<div id="nf-field-{{{ data.id }}}-wrap" class="{{{ data.renderWrapClass() }}}" data-field-id="{{{ data.id }}}">
+		<#
+		/*
+		 * This is our main field template. It's called for every field type.
+		 * Note that must have ONE top-level, wrapping element. i.e. a div/span/etc that wraps all of the template.
+		 */
+        #>
+		<#
+		/*
+		 * Render our label.
+		 */
+        #>
+		{{{ data.renderLabel() }}}
+		<#
+		/*
+		 * Render our field element. Uses the template for the field being rendered.
+		 */
+        #>
+		<div class="nf-field-element">{{{ data.renderElement() }}}</div>
+		<#
+		/*
+		 * Render our Description Text.
+		 */
+        #>
+		{{{ data.renderDescText() }}}
+	</div>
+</script>
+<script id="tmpl-nf-field-wrap-no-label" type="text/template">
+    <div id="nf-field-{{{ data.id }}}-wrap" class="{{{ data.renderWrapClass() }}}" data-field-id="{{{ data.id }}}">
+        <div class="nf-field-label"></div>
+        <div class="nf-field-element">{{{ data.renderElement() }}}</div>
+        <div class="nf-error-wrap"></div>
+    </div>
+</script>
+<script id="tmpl-nf-field-wrap-no-container" type="text/template">
+
+        {{{ data.renderElement() }}}
+
+        <div class="nf-error-wrap"></div>
+</script>
+<script id="tmpl-nf-field-label" type="text/template">
+	<div class="nf-field-label">
+		<# if ( data.type === "listcheckbox" || data.type === "listradio" || data.type === "listimage" || data.type === "date" || data.type === "starrating" || data.type === "signature" || data.type === "html" || data.type === "hr" ) { #>
+			<span id="nf-label-field-{{{ data.id }}}"
+				class="nf-label-span {{{ data.renderLabelClasses() }}}">
+					{{{ ( data.maybeFilterHTML() === 'true' ) ? _.escape( data.label ) : data.label }}} {{{ ( 'undefined' != typeof data.required && 1 == data.required ) ? '<span class="ninja-forms-req-symbol">*</span>' : '' }}} 
+					{{{ data.maybeRenderHelp() }}}
+			</span>
+		<# } else { #>
+			<label for="nf-field-{{{ data.id }}}"
+					id="nf-label-field-{{{ data.id }}}"
+					class="{{{ data.renderLabelClasses() }}}">
+						{{{ ( data.maybeFilterHTML() === 'true' ) ? _.escape( data.label ) : data.label }}} {{{ ( 'undefined' != typeof data.required && 1 == data.required ) ? '<span class="ninja-forms-req-symbol">*</span>' : '' }}} 
+						{{{ data.maybeRenderHelp() }}}
+			</label>
+		<# } #>
+	</div>
+</script>
+<script id="tmpl-nf-field-error" type="text/template">
+	<div class="nf-error-msg nf-error-{{{ data.id }}}" aria-live="assertive">{{{ data.msg }}}</div>
+</script><script id="tmpl-nf-form-error" type="text/template">
+	<div class="nf-error-msg nf-error-{{{ data.id }}}">{{{ data.msg }}}</div>
+</script><script id="tmpl-nf-field-input-limit" type="text/template">
+    {{{ data.currentCount() }}} {{{ nfi18n.of }}} {{{ data.input_limit }}} {{{ data.input_limit_msg }}}
+</script><script id="tmpl-nf-field-null" type="text/template">
+</script><script id="tmpl-nf-field-email" type="text/template">
+	<input
+		type="email"
+		value="{{{ _.escape( data.value ) }}}"
+		class="{{{ data.renderClasses() }}} nf-element"
+		id="nf-field-{{{ data.id }}}"
+		name="{{ data.custom_name_attribute || 'nf-field-' + data.id + '-' + data.type }}"
+		{{{data.maybeDisableAutocomplete()}}}
+		{{{ data.renderPlaceholder() }}}
+		{{{ data.maybeDisabled() }}}
+		aria-invalid="false"
+		aria-describedby="<# if( data.desc_text ) { #>nf-description-{{{ data.id }}} <# } #>nf-error-{{{ data.id }}}"
+		aria-labelledby="nf-label-field-{{{ data.id }}}"
+		{{{ data.maybeRequired() }}}
+	>
+</script>
+<script id='tmpl-nf-field-input' type='text/template'>
+    <input id="nf-field-{{{ data.id }}}" name="nf-field-{{{ data.id }}}" aria-invalid="false" aria-describedby="<# if( data.desc_text ) { #>nf-description-{{{ data.id }}} <# } #>nf-error-{{{ data.id }}}" class="{{{ data.renderClasses() }}} nf-element" type="text" value="{{{ _.escape( data.value ) }}}" {{{ data.renderPlaceholder() }}} {{{ data.maybeDisabled() }}}
+           aria-labelledby="nf-label-field-{{{ data.id }}}"
+
+            {{{ data.maybeRequired() }}}
+    >
+</script>
+<script id="tmpl-nf-field-submit" type="text/template">
+
+<# 
+let myType = data.type
+if('save'== data.type){
+	myType = 'button'
+}
+#>
+<input id="nf-field-{{{ data.id }}}" class="{{{ data.renderClasses() }}} nf-element " type="{{{myType}}}" value="{{{ ( data.maybeFilterHTML() === 'true' ) ? _.escape( data.label ) : data.label }}}" {{{ ( data.disabled ) ? 'aria-disabled="true" disabled="true"' : '' }}}>
+
+</script><script id='tmpl-nf-field-button' type='text/template'>
+    <button id="nf-field-{{{ data.id }}}" name="nf-field-{{{ data.id }}}" class="{{{ data.classes }}} nf-element">
+        {{{ ( data.maybeFilterHTML() === 'true' ) ? _.escape( data.label ) : data.label }}}
+    </button>
+</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2e66cd6d997b22e',t:'MTc4NzI4MTYyMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

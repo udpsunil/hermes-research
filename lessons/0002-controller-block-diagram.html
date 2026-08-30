@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson 2: The Controller Block Diagram — SSD Debug Architect</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<h1>Lesson 2: The Controller Block Diagram</h1>
+<p class="lesson-meta">Weekend 1, Sunday session · ~60 min · Mission: become an SSD debug architect</p>
+
+<div class="win"><strong>Today's win:</strong> You will draw, from memory, the block diagram of an SSD controller with every major block labeled and the three data paths traced through it. This diagram is the map you'll use for every debug session in this course.</div>
+
+<h2>1. What the controller actually is</h2>
+<p>The controller is a small computer built for one job: make dumb, weird NAND look like a reliable block device to the host. It is usually an ARM-based SoC with specialized hardware accelerators attached. Everything on the board except the NAND dies and the DRAM lives inside this one chip.</p>
+
+<h2>2. The blocks</h2>
+<table>
+<tr><th>Block</th><th>Job</th><th>Debug lens: what breaks</th></tr>
+<tr><td><strong>Host interface</strong> (PCIe/NVMe or SATA)</td><td>Speaks the host protocol, moves data over the bus</td><td>Link training failures, NVMe timeouts, surprise link-down</td></tr>
+<tr><td><strong>CPU cores</strong> (2–8 ARM cores)</td><td>Run the firmware: FTL, command scheduling, wear leveling</td><td>Firmware bugs, race conditions, CPU saturation under load</td></tr>
+<tr><td><strong>ECC engine</strong> (LDPC/BCH)</td><td>Corrects bit errors on every read; generates parity on write</td><td>Uncorrectable errors when RBER exceeds correction capability</td></tr>
+<tr><td><strong>NAND controllers</strong> (one per channel)</td><td>Drive the NAND dies: page reads, programs, erases</td><td>Channel contention, die timeouts, program failures</td></tr>
+<tr><td><strong>DRAM</strong></td><td>Holds the FTL mapping table and write buffers</td><td>Mapping loss on power cut without capacitor support</td></tr>
+<tr><td><strong>Power-loss protection</strong> (capacitors)</td><td>Hold-up energy to flush buffers during a power cut</td><td>Corrupted FTL after unsafe shutdowns; failed caps</td></tr>
+<tr><td><strong>Boot ROM</strong></td><td>First code that runs; loads firmware from NAND</td><td>Bricked drives from bad firmware updates</td></tr>
+</table>
+
+<h2>3. The three data paths</h2>
+<p>Trace these three paths on your diagram. Every performance or data-integrity bug lives on one of them.</p>
+<h3>Write path</h3>
+<pre>Host → host interface → CPU (FTL decides where) → write buffer (DRAM)
+    → NAND controller → ECC parity generated → program page on die</pre>
+<p>Note the data sits in volatile DRAM briefly. If power dies here, the capacitor must carry the flush. No capacitor, no guarantee.</p>
+<h3>Read path</h3>
+<pre>Host → host interface → CPU (looks up mapping) → NAND controller
+    → read page → ECC engine corrects → DRAM buffer → host interface → host</pre>
+<p>Latency here is your read-latency debug target. Mapping lookup, die access, and ECC decode time stack up.</p>
+<h3>Internal path (garbage collection)</h3>
+<pre>CPU decides block is garbage-heavy → read valid pages → write them
+    elsewhere (through ECC again) → erase the block</pre>
+<p>This traffic never touches the host. It competes for the same channels and dies as host I/O. That competition is why full drives get slow.</p>
+
+<h2>4. Parallelism: channels and ways</h2>
+<p>A drive gets its bandwidth from running many dies at once. Eight channels, four dies per channel means 32 dies working in parallel. The controller interleaves pages across them. When you debug a bandwidth problem, you ask: are all channels busy, or is traffic piling up on a few? The Cactus Tech primer covers this well.</p>
+
+<h2>Check your understanding</h2>
+
+<div class="quiz-q" data-answer="1">
+<p><strong>Q1.</strong> Why does the mapping table live in DRAM and not in the controller's internal SRAM?</p>
+<button>SRAM is too slow for lookups</button>
+<button>A full-drive table is far too large for SRAM</button>
+<button>DRAM survives power loss better</button>
+<button>The firmware requires it to be writable</button>
+<div class="feedback" data-good="Correct. A 1TB drive with 4KB pages needs around half a gigabyte of table. Only DRAM holds that." data-bad="Not quite. It is a size problem: the table for a 1TB drive runs to hundreds of megabytes, which only DRAM holds."></div>
+</div>
+
+<div class="quiz-q" data-answer="2">
+<p><strong>Q2.</strong> Garbage collection traffic slows host I/O because it competes for what?</p>
+<button>The host PCIe link</button>
+<button>The CPU interrupt controller</button>
+<button>The same NAND channels and dies</button>
+<button>The DRAM refresh cycles</button>
+<div class="feedback" data-good="Correct. GC reads and writes go through the same channels as host I/O. That contention is the latency spike you see in traces." data-bad="Not quite. GC never touches the host link. It competes for NAND channels and dies, the same resource host I/O needs."></div>
+</div>
+
+<div class="quiz-q" data-answer="0">
+<p><strong>Q3.</strong> A drive loses its mapping table after a power cut. Which block failed first?</p>
+<button>Power-loss protection</button>
+<button>The ECC engine</button>
+<button>The host interface</button>
+<button>The boot ROM</button>
+<div class="feedback" data-good="Correct. In-flight data and the mapping journal sat in DRAM. The capacitor should have powered the flush and did not." data-bad="Not quite. The mapping lives in DRAM and needs hold-up power to flush on failure. That points at the power-loss protection."></div>
+</div>
+
+<h2>Do this now (45 min)</h2>
+<p>Draw the diagram yourself. Blank paper, pen, no reference. Requirements:</p>
+<ol>
+<li>All seven blocks from the table, placed roughly where data flows</li>
+<li>NAND dies drawn as groups of 4 hanging off 8 channel lines</li>
+<li>DRAM connected with a note saying what lives in it</li>
+<li>Three arrows in different colors: write path, read path, GC path</li>
+</ol>
+<p>Stuck on a block? Peek at the glossary or the alvinrolling article, then close it and draw from memory again. The struggle is the point.</p>
+
+<h2>Primary source</h2>
+<p>Read the alvinrolling controller deep-dive, then the Cactus Tech primer on channels and banks. Both are local:</p>
+<pre>start materials/alvinrolling_ssd_controller.html
+start materials/cactus_tech_primer.html</pre>
+
+<footer>
+<strong>Questions?</strong> Ask me in the chat. If your diagram and mine disagree, bring me your version and we'll find the gap together.<br>
+Quick lookup: <a href="../reference/nand-glossary.html">NAND Glossary</a> · Previous: <a href="0001-nand-flash-basics.html">Lesson 1</a><br>
+Next weekend: FTL part 1, mapping tables. Full plan: <a href="../ssd_debug_study_plan.md">ssd_debug_study_plan.md</a>
+</footer>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
