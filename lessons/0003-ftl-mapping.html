@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson 3: FTL Part 1 — Mapping — SSD Debug Architect</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<h1>Lesson 3: FTL Part 1 — Mapping</h1>
+<p class="lesson-meta">Weekend 3 · Saturday session · ~60 min</p>
+
+<div class="win"><strong>Today's win:</strong> You will explain how the FTL mapping table works, why page-level mapping needs DRAM, why block-level mapping is cheap but slow, and how hybrid schemes split the difference. You will also calculate the DRAM cost of a mapping table for a real drive.</div>
+
+<h2>1. What the FTL actually does</h2>
+<p>The host sends a write to LBA 1,004 (a logical address). NAND has no concept of LBA. The FTL maintains a translation table: logical block address → physical NAND location. Every read, every write, every trim goes through this table.</p>
+<p>The FTL has four jobs. Today we focus on mapping. The others: wear leveling, garbage collection, bad-block management.</p>
+
+<h2>2. Three mapping schemes</h2>
+
+<h3>Page-level mapping</h3>
+<p>One table entry per logical page. Flexible: any physical page can hold any logical page.</p>
+<p><strong>Pros:</strong> maximum performance, minimal write amplification.</p>
+<p><strong>Cons:</strong> the table is huge.</p>
+<p>Math. A 1 TB drive with 4 KB pages = 256 M logical pages. Each entry stores a physical page address: typically 4–8 bytes (die, plane, block, page). Say 8 bytes. 256 M × 8 B = 2 GB of RAM just for the table. That needs DRAM, not SRAM. Expensive. Possible, but expensive.</p>
+
+<h3>Block-level mapping</h3>
+<p>One table entry per logical block (block = 64–512 pages). The controller tracks which logical block lives in which physical block and which offset inside it.</p>
+<p><strong>Pros:</strong> tiny table. 1 TB drive ÷ 4 MB blocks = 256 K entries × 8 B = 2 MB of RAM.</p>
+<p><strong>Cons:</strong> whenever the host writes a single page, the entire block containing that page must be relocated. High write amplification. Wasteful.</p>
+
+<h3>Hybrid mapping (most common)</h3>
+<p>Block-level mapping for the top-level table, plus a small per-block log buffer (often 2–4 pages) where incoming writes land. When a log block fills, the controller merges it back into the parent block.</p>
+<p><strong>Pros:</strong> cheap table + most writes handled in the log. Real-world drives use variants of this.</p>
+<p><strong>Cons:</strong> merge operations still cause write amplification. Complexity lives in the merge policy.</p>
+
+<h2>3. The mapping table lives in DRAM</h2>
+<p>On power loss, the mapping table is rebuilt from NAND by scanning. This takes time and is why drives have a "first access slower" behavior after a cold boot. Drives with power-loss capacitors can flush the table periodically and restore it faster.</p>
+
+<h2>Check your understanding</h2>
+
+<div class="quiz-q" data-answer="2">
+<p><strong>Q1.</strong> A 2 TB TLC drive uses page-level mapping. Each table entry is 8 bytes. How much DRAM is needed just for the mapping table?</p>
+<button>8 KB</button>
+<button>16 MB</button>
+<button>4 GB</button>
+<button>256 KB</button>
+<div class="feedback" data-good="Correct. 2 TB ÷ 4 KB = 512 M pages × 8 B = 4 GB." data-bad="Wrong. 2 TB ÷ 4 KB = 512 M entries × 8 B = 4 GB of DRAM."></div>
+</div>
+
+<div class="quiz-q" data-answer="1">
+<p><strong>Q2.</strong> Which mapping scheme has the lowest write amplification?</p>
+<button>Block-level mapping</button>
+<button>Page-level mapping</button>
+<button>Hybrid mapping</button>
+<button>All the same</button>
+<div class="feedback" data-good="Correct. Page-level mapping writes exactly what the host sent to exactly where it needs to go. No extra NAND writes." data-bad="Wrong. Page-level mapping writes exactly what the host sent with no extra moves. Block-level forces block relocations on every small write."></div>
+</div>
+
+<div class="quiz-q" data-answer="0">
+<p><strong>Q3.</strong> After a power cut with no capacitor, the drive takes 30 seconds before it responds to I/O. What is the drive doing?</p>
+<button>Rebuilding the mapping table from NAND scan</button>
+<button>Running a flash test</button>
+<button>Checking for bad blocks</button>
+<button>Calibrating ECC</button>
+<div class="feedback" data-good="Correct. The table lived in DRAM. Without a capacitor to flush it, the drive must scan NAND to reconstruct it. That's the 30-second delay." data-bad="Wrong. The mapping table was in DRAM. Without capacitor protection the drive must scan NAND to rebuild it. That's the long restart time."></div>
+</div>
+
+<h2>Do this now (20 min)</h2>
+<p>Read the SSD-Guide FTL section locally: open <code>materials/SSD-Guide/</code> in a file explorer and read the FTL overview. Then calculate two things from memory:</p>
+<ol>
+<li>A 512 GB QLC drive with 16 KB pages, 8 B per entry. Table size = ?</li>
+<li>A 4 TB enterprise drive with block-level mapping, 4 MB blocks, 8 B per entry. Table size = ?</li>
+</ol>
+
+<h2>Primary source</h2>
+<p>Read the LeaFTL paper intro for the research perspective: <a href="../materials/LeaFTL_arxiv.pdf">materials/LeaFTL_arxiv.pdf</a>. Focus on §2 (background) and §3 (FTL design space). The hybrid mapping table is on page 3.</p>
+
+<footer>
+<strong>Questions?</strong> Ask in the chat. If the merge operation in hybrid mapping is fuzzy, bring that question.<br>
+Reference: <a href="../reference/nand-glossary.html">NAND Glossary</a> · <a href="0002-controller-block-diagram.html">Lesson 2</a> · Next: <a href="0004-ftl-gc-wear.html">Lesson 4 — FTL Part 2: GC and Wear</a>
+</footer>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
